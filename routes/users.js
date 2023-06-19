@@ -1,4 +1,4 @@
-const express = require('express');
+import express from "express";
 const router = express.Router();
 
 router.get('/profile', (req, res) => {
@@ -13,4 +13,4 @@ router.post('/login', (req, res) => {
     res.render('login')
 })
 
-module.exports = router;
+export default router;
