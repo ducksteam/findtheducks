@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ducks | sign in</title>
+</head>
+<body>
+    <%- include("templates/header") %>
+    <div class="content">
+        <div class="login_box">
+            <!-- call an express function to sign in -->
+            <h2>Sign in</h2>
+            <form>
+                <div class="user_box">
+                    <input type="text" name="email" required>
+                    <label>Email</label>
+                </div>
+                <div class="user_box">
+                    <input type="password" name="password" required>
+                    <label>Password</label>
+                </div>
+                <button type="submit">Sign in</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
