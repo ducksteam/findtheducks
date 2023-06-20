@@ -7,7 +7,7 @@
     <%- include("../templates/header") %>
     <div class="content">
         <div class="login_box">
-            <h2>Sign up</h2>
+            <h2>join the duckers</h2>
             <% if (errorMsg == "undefined") {
             } else if ( errorMsg !== "Success!") { %>
                 <div class="alert alert-danger"><%= errorMsg %></div>
@@ -16,24 +16,25 @@
             <% } %>
             <form action="/users/register" method="post">
                 <div class="user_box">
-                    <label>Email</label> <br>
+                    <label>email</label> <br>
                     <input type="text" name="email" required>
                 </div>
                 <div class="user_box"> 
-                    <label>Username</label> <br>
+                    <label>username</label> <br>
                     <input type="text" name="username" required>
                 </div>
                 <div class="user_box">
-                    <label>Password</label> <br>
+                    <label>password</label> <br>
                     <input type="password" name="password" required>
                 </div>
                 <div class="user_box">
-                    <label>Confirm Password</label> <br>
+                    <label>confirm password</label> <br>
                     <input type="password" name="confirmPassword" required>
                 </div>
-                <button type="submit">Sign in</button>
+                <br>
+                <button type="submit">join the duckening</button>
             </form>
-            <p>Already have an account? <a href="/login">Sign in</a></p>
+            <p>already a ducker? <a href="/users/login">sign in here</a></p>
         </div>
     </div>
 </body>
