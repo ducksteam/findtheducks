@@ -2,15 +2,17 @@ import express from "express";
 const router = express.Router();
 
 router.get('/profile', (req, res) => {
-    res.render('profile')
+    res.render('users/profile')
 })
 
 router.get('/register', (req, res) => {
-    res.render('register')
+    res.render('users/register')
 })
 
-router.post('/login', (req, res) => {
-    res.render('login')
+router.get('/login', (req, res) => {
+    res.render('users/login')
 })
+
+router.use(express.static("public"));
 
 export default router;
