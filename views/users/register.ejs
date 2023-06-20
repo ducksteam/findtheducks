@@ -8,8 +8,10 @@
     <div class="content">
         <div class="login_box">
             <h2>Sign up</h2>
-            <% if (errorMsg) { %>
+            <% if (errorMsg && errorMsg !== "Success!") { %>
                 <div class="alert alert-danger"><%= errorMsg %></div>
+            <% } else if (errorMsg) {%>
+                <div class="alert alert-success"><%= errorMsg %></div>
             <% } %>
             <form action="/signup" method="post">
                 <div class="user_box">
