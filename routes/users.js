@@ -16,7 +16,6 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-	console.log(req.body);
 	const { email, username, password, confirmPassword } = req.body;
 	const error = await register(email, username, password, confirmPassword);
 	res.redirect("/users/register?error=" + encodeURIComponent(error));
