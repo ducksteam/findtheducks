@@ -15,10 +15,10 @@ router.get("/login", (req, res) => {
 	res.render("users/login", { pageTitle: "sign in" });
 });
 
-router.post("/signup", (req, res) => {
+router.post("/register", async (req, res) => {
 	console.log(req.body);
 	const { email, username, password, confirmPassword } = req.body;
-	const error = register(email, username, password, confirmPassword);
+	const error = await register(email, username, password, confirmPassword);
 	res.redirect("/users/register?error=" + encodeURIComponent(error));
 });
 
