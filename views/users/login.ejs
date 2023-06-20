@@ -8,6 +8,12 @@
     <div class="content">
         <div class="login_box">
             <h2>rejoin the flock</h2>
+            <% if (errorMsg == "undefined") {
+            } else if ( errorMsg !== "Success!") { %>
+                <div class="alert alert-danger"><%= errorMsg %></div>
+            <% } else { %>
+                <div class="alert alert-success"><%= errorMsg %></div>
+            <% } %>
             <form>
                 <div class="user_box">
                     <label>email</label> <br>

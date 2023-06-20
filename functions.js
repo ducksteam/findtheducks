@@ -30,4 +30,28 @@ async function register(email, username, password, confirmPassword) {
 	return error;
 }
 
-export { register };
+function login(email, password) {
+	let error;
+	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+	if (!email.match(mailFormat)) {
+		error = "Invalid email";
+		return error;
+	}
+	let emailCheck = sql`select * from users where email = ${email}`;
+	if (emailCheck.length === 0) {
+		error = "Email not found";
+		return error;
+	}
+	const passwordCheck = bcrypt.compare(password, emailCheck[0].password_hash);
+	if (!passwordCheck) {
+		error = "Incorrect password";
+		return error;
+	}
+	if (!error) {
+		// generate unique session id
+		
+		// store session id in database
+	}
+}
+
+export { register, login };
