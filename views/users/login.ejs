@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ducks | sign in</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <%- include("templates/header") %>
+    <%- include("../templates/header") %>
     <div class="content">
         <div class="login_box">
-            <!-- call an express function to sign in -->
             <h2>Sign in</h2>
             <form>
                 <div class="user_box">
+                    <label>Email</label> <br>
                     <input type="text" name="email" required>
-                    <label>Email</label>
                 </div>
                 <div class="user_box">
+                    <label>Password</label> <br>
                     <input type="password" name="password" required>
-                    <label>Password</label>
                 </div>
                 <button type="submit">Sign in</button>
             </form>

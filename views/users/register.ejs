@@ -4,11 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ducks | sign up</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <%- include("templates/header") %>
+    <%- include("../templates/header") %>
     <div class="content">
-        
+        <div class="login_box">
+            <h2>Sign up</h2>
+            <form>
+                <div class="user_box">
+                    <label>Email</label> <br>
+                    <input type="text" name="email" required>
+                </div>
+                <div class="user_box"> 
+                    <label>Username</label> <br>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="user_box">
+                    <label>Password</label> <br>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="user_box">
+                    <label>Confirm Password</label> <br>
+                    <input type="password" name="password2" required>
+                </div>
+                <button type="submit">Sign in</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>
