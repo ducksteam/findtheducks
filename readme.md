@@ -19,6 +19,7 @@
 - [ ] Profile info
 - [ ] Update display name
 - [ ] Duck entry
+- [ ] Rate limiting duck entry
 - [ ] New duck codes
 - [ ] Scoreboard
 - [ ] Improve UI
