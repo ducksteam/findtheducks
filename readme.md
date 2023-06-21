@@ -1,6 +1,6 @@
-## Duck Mafia
+# Duck Mafia
 
-# TODO:
+## TODO:
 - [x] Registration
 - [x] Logging in
 - [ ] Email verification
