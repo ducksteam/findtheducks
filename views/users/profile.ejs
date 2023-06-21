@@ -4,9 +4,9 @@
 <%- include("../templates/head") %>
 </head>
 <body>
-    <%- include("../templates/header") %>
+    <%- include("../templates/header", {authorised: authorised}) %>
     <div class="content">
-        
+        <%= username %>
     </div>
 </body>
 </html>

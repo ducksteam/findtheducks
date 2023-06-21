@@ -43,7 +43,7 @@ async function register(email, username, password, confirmPassword) {
 	}
 }
 
-async function login(email, password) {
+async function login(req, res, email, password) {
 	// Check email is valid
 	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 	if (!email.match(mailFormat)) {
@@ -51,17 +51,19 @@ async function login(email, password) {
 	}
 
 	// Check email has associated account
-	let emailCheck = await sql`select * from users where email = ${email}`;
-	if (emailCheck.length === 0) {
+	let user = await sql`select * from users where email = ${email}`;
+	if (user.length === 0) {
 		return "Email not registered";
 	}
 
 	// Check password is correct
-	const passwordCheck = await bcrypt.compare(password, emailCheck[0].password_hash);
+	const passwordCheck = await bcrypt.compare(password, user[0].password_hash);
 	if (!passwordCheck) {
 		return "Incorrect password";
 	}
 	
+	req.session.user = user[0];
+	req.session.authorised = true;
 }
 
 export { register, login };
