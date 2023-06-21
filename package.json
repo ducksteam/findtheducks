@@ -15,6 +15,7 @@
     "nodemon": "^2.0.22"
   },
   "dependencies": {
+    "bad-words": "^3.0.4",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "ejs": "^3.1.9",

@@ -1,8 +1,10 @@
 import bcrypt from "bcrypt";
+import Filter from "bad-words";
 import sql from "./db.js";
 
 async function register(email, username, password, confirmPassword) {
 	let error;
+	const filter = new Filter();
 	if (password !== confirmPassword) {
 		error = "Passwords do not match";
 	}
@@ -13,6 +15,9 @@ async function register(email, username, password, confirmPassword) {
 	let emailCheck = await sql`select * from users where email = ${email}`;
 	if (emailCheck.length !== 0) {
 		error = "Email already in use";
+	}
+	if(filter.isProfane(username)){
+		error = "Username contains profanity";
 	}
 	let usernameCheck = await sql`select * from users where username = ${username}`;
 	if (usernameCheck.length !== 0) {
