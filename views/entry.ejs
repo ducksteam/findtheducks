@@ -5,7 +5,13 @@
 <body>
     <%- include("./templates/header", {authorised: authorised}) %>
     <div class="content">
-
+        <h1>Entry</h1>
+        <p>Enter the 8 character code found on the duck.</p>
+        <form action="/entry" method="POST">
+            <label>Duck Code</label>
+            <input type="text" name="duckCode" required>
+            <input type="submit" value="Submit">
+        </form>
     </div>
 </body>
 </html>

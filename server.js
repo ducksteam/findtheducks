@@ -2,6 +2,7 @@ import express from "express";
 import session from "express-session";
 import userRouter from "./routes/users.js";
 import bodyParser from "body-parser";
+import { entry } from "./functions.js";
 
 const app = express(); // Create express app
 
@@ -25,11 +26,21 @@ app.get("/", (req, res) => { // Serve home page
 });
 
 app.get("/entry", (req, res) => { // Serve entry page
-	res.render("entry", { pageTitle: "duck entry", authorised: req.session.authorised });
+	if(req.session.authorised){
+		const status = decodeURIComponent(req.query.status) || "";
+		res.render("entry", { pageTitle: "duck entry", authorised: req.session.authorised, status });
+	} else {
+		res.redirect("/users/login?status=" + encodeURIComponent("Please log in to enter a duck"));
+	}
 });
 
 app.get("/scoreboard", (req, res) => { // Serve scoreboard page
 	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised });
+});
+
+app.post("/entry", (req, res) => { // Handle entry form submission
+	const status = entry(req, res, req.body.duckCode);
+	res.redirect("/entry?status=" + encodeURIComponent(status));
 });
 
 app.use("/users", userRouter); // Use user router

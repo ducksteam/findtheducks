@@ -11,7 +11,7 @@ router.get("/profile", (req, res) => { // Serve profile page
 });
 
 router.get("/register", (req, res) => { // Serve register page
-	const errorMsg = decodeURIComponent(req.query.error) || "";
+	const errorMsg = decodeURIComponent(req.query.status) || "";
 	res.render("users/register", { errorMsg, pageTitle: "sign up", authorised: req.session.authorised });
 });
 
@@ -19,7 +19,7 @@ router.get("/login", (req, res) => { // Serve login page
 	if(req.session.authorised){
 		res.redirect("profile");
 	} else {
-		const errorMsg = decodeURIComponent(req.query.error) || "";
+		const errorMsg = decodeURIComponent(req.query.status) || "";
 		res.render("users/login", { errorMsg, pageTitle: "sign in", authorised: req.session.authorised });
 	}
 });
@@ -31,17 +31,17 @@ router.get("/logout", (req, res) => { // Handle logout
 
 router.post("/register", async (req, res) => { // Handle register form submission
 	const { email, username, password, confirmPassword } = req.body;
-	const error = await register(email, username, password, confirmPassword);
-	res.redirect("/users/register?error=" + encodeURIComponent(error));
+	const status = await register(email, username, password, confirmPassword);
+	res.redirect("/users/register?status=" + encodeURIComponent(status));
 });
 
 router.post("/login", async (req, res) => { // Handle login form submission
 	const { email, password } = req.body;
-	const error = await login(req, res, email, password);
-	if (error === "Success!") {
+	const status = await login(req, res, email, password);
+	if (status === "Success!") {
 		res.redirect("profile");
 	} else {
-		res.redirect("/users/login?error=" + encodeURIComponent(error));
+		res.redirect("/users/login?status=" + encodeURIComponent(status));
 	}
 });
 

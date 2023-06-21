@@ -66,4 +66,13 @@ async function login(req, res, email, password) {
 	req.session.authorised = true;
 }
 
-export { register, login };
+async function entry(req, res, duckCode){
+	let duckCheck = await sql`select * from ducks where duck_key = ${duckCode}`;
+	if (duckCheck.length === 0) {
+		return "Duck not found";
+	}
+	await sql`insert into finds (user_id, duck_id, find_date) VALUES (${req.session.user.id}, ${duckCheck[0].id}, NOW())`;
+	return "Success!";
+}
+
+export { register, login, entry };
