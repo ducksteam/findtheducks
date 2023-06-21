@@ -3,60 +3,65 @@ import Filter from "bad-words";
 import sql from "./db.js";
 
 async function register(email, username, password, confirmPassword) {
-	let error;
 	const filter = new Filter();
+
+	// Check passwords match
 	if (password !== confirmPassword) {
-		error = "Passwords do not match";
+		return "Passwords do not match";
 	}
+
+	// Check email is valid
 	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 	if (!email.match(mailFormat)) {
-		error = "Invalid email";
+		return "Invalid email";
 	}
+	
+	// Check username is valid
 	let emailCheck = await sql`select * from users where email = ${email}`;
 	if (emailCheck.length !== 0) {
-		error = "Email already in use";
+		return "Email already in use";
 	}
+
+	// Check username is not profane
 	if(filter.isProfane(username)){
-		error = "Username contains profanity";
+		return "Username contains profanity";
 	}
+
+	// Check username is not taken
 	let usernameCheck = await sql`select * from users where username = ${username}`;
 	if (usernameCheck.length !== 0) {
-		error = "Username already in use";
+		return "Username already in use";
 	}
-	if (!error) {
-		try {
-			const passwordHash = await bcrypt.hash(password, 10);
-			await sql`insert into users (email, username, password_hash, permissions) values (${email}, ${username}, ${passwordHash}, 0)`;
-			return "Success!";
-		} catch (err) {
-			error = "Error inserting into database";
-		}
+
+	// Hash password and insert into database
+	try {
+		const passwordHash = await bcrypt.hash(password, 10);
+		await sql`insert into users (email, username, password_hash, permissions) values (${email}, ${username}, ${passwordHash}, 0)`;
+		return "Success!";
+	} catch (err) {
+		return "Error inserting into database";
 	}
-	return error;
 }
 
-function login(email, password) {
-	let error;
+async function login(email, password) {
+	// Check email is valid
 	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 	if (!email.match(mailFormat)) {
-		error = "Invalid email";
-		return error;
+		return "Invalid email";
 	}
+
+	// Check email has associated account
 	let emailCheck = sql`select * from users where email = ${email}`;
 	if (emailCheck.length === 0) {
-		error = "Email not found";
-		return error;
+		return "Email not found";
 	}
+	
+	// Check password is correct
 	const passwordCheck = bcrypt.compare(password, emailCheck[0].password_hash);
 	if (!passwordCheck) {
-		error = "Incorrect password";
-		return error;
+		return "Incorrect password";
 	}
-	if (!error) {
-		// generate unique session id
-		
-		// store session id in database
-	}
+	
 }
 
 export { register, login };
