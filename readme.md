@@ -14,7 +14,7 @@
 - [x] Registration
 - [x] Logging in
 - [x] Logging out
-- [ ] Duck entry
+- [x] Duck entry
 - [ ] Scoreboard
 - [ ] Profile info
 - [ ] New duck codes

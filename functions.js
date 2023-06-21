@@ -71,6 +71,10 @@ async function entry(req, res, duckCode){
 	if (duckCheck.length === 0) {
 		return "Duck not found";
 	}
+	let findCheck = await sql`select * from finds where user_id = ${req.session.user.id} and duck_id = ${duckCheck[0].id}`;
+	if (findCheck.length !== 0) {
+		return "Duck already found";
+	}
 	await sql`insert into finds (user_id, duck_id, find_date) VALUES (${req.session.user.id}, ${duckCheck[0].id}, NOW())`;
 	return "Success!";
 }

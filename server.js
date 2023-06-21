@@ -38,8 +38,9 @@ app.get("/scoreboard", (req, res) => { // Serve scoreboard page
 	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised });
 });
 
-app.post("/entry", (req, res) => { // Handle entry form submission
-	const status = entry(req, res, req.body.duckCode);
+app.post("/entry", async (req, res) => { // Handle entry form submission
+	console.log(req.body.duckCode);
+	const status = await entry(req, res, req.body.duckCode);
 	res.redirect("/entry?status=" + encodeURIComponent(status));
 });
 

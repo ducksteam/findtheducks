@@ -6,7 +6,7 @@ router.get("/profile", (req, res) => { // Serve profile page
 	if(req.session.authorised){
 		res.render("users/profile", { pageTitle: "profile", username: req.session.user.username, authorised: req.session.authorised });
 	} else {
-		res.redirect("login");
+		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
 });
 
@@ -26,7 +26,7 @@ router.get("/login", (req, res) => { // Serve login page
 
 router.get("/logout", (req, res) => { // Handle logout
 	req.session.destroy();
-	res.redirect("login?error=" + encodeURIComponent("Logged out"));
+	res.redirect("login?status=" + encodeURIComponent("Logged out"));
 });
 
 router.post("/register", async (req, res) => { // Handle register form submission
