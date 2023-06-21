@@ -2,11 +2,13 @@ import express from "express";
 import session from "express-session";
 import userRouter from "./routes/users.js";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 const app = express(); // Create express app
 
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form submissions
 app.use(bodyParser.json());
+app.use(cookieParser()); // Parse cookies
 
 app.set("view engine", "ejs"); // Set view engine to ejs
 
