@@ -8,5 +8,6 @@
 - [ ] Profile info
 - [ ] Update display name
 - [ ] Duck entry
+- [ ] New duck codes
 - [ ] Scoreboard
 - [ ] Improve UI
