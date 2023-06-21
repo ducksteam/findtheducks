@@ -10,16 +10,16 @@
 - Server will appear [here](http://localhost:3000/)
 - No database commands will work until you DM me your [public IP](https://www.whatismyip.com/) and I set it in azure (still not paying of course)
 
-## TODO:
+## TODO: (rough order of priority)
 - [x] Registration
 - [x] Logging in
 - [x] Logging out
-- [ ] Email verification
-- [ ] Password reset
-- [ ] Profile info
-- [ ] Update display name
 - [ ] Duck entry
-- [ ] Rate limiting duck entry
-- [ ] New duck codes
 - [ ] Scoreboard
+- [ ] Profile info
+- [ ] New duck codes
+- [ ] Email verification
 - [ ] Improve UI
+- [ ] Rate limiting duck entry
+- [ ] Password reset
+- [ ] Update display name
