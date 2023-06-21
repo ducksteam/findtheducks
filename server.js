@@ -13,7 +13,8 @@ app.set("view engine", "ejs"); // Set view engine to ejs
 app.use(session({ // Set up session
 	secret: "yr6wu47r6WLPwl88kuro8pp5gdhag$Flkehey",
 	cookie: {
-		sameSite: "strict"
+		sameSite: "strict",
+		maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
 	},
 	resave: false,
 	saveUninitialized: true
