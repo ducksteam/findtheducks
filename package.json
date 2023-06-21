@@ -2,7 +2,7 @@
   "name": "findtheducks",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "devStart": "nodemon server.js -e js,ejs,css,html"
