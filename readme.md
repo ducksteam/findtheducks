@@ -13,6 +13,7 @@
 ## TODO:
 - [x] Registration
 - [x] Logging in
+- [x] Logging out
 - [ ] Email verification
 - [ ] Password reset
 - [ ] Profile info
