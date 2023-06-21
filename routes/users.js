@@ -24,8 +24,15 @@ router.post("/register", async (req, res) => { // Handle register form submissio
 
 router.post("/login", async (req, res) => { // Handle login form submission
 	const { email, password } = req.body;
-	const error = await login(email, password);
-	res.redirect("/users/login?error=" + encodeURIComponent(error));
+	const attempt = await login(email, password);
+	if(attempt.status === "success"){
+		console.log("Logged in");
+		req.session.loggedIn = true;
+		req.session.sessionId = attempt.msg;
+		res.redirect("profile");
+	} else if(attempt.status === "error"){
+		res.redirect("/users/login?error=" + encodeURIComponent(attempt.msg));
+	}
 });
 
 router.use(express.static("public")); // Serve static files

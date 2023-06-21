@@ -14,7 +14,7 @@
             <% } else { %>
                 <div class="alert alert-success"><%= errorMsg %></div>
             <% } %>
-            <form>
+            <form action="/users/login" method="post">
                 <div class="user_box">
                     <label>email</label> <br>
                     <input type="text" name="email" required>
