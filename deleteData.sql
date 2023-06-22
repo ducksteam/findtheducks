@@ -1,0 +1,3 @@
+DELETE FROM users;
+DELETE FROM ducks;
+DELETE FROM finds;
