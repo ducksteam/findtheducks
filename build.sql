@@ -8,20 +8,17 @@ CREATE TABLE users (
     email VARCHAR(99),
     username VARCHAR(20),
     password_hash VARCHAR(60),
-    permissions SMALLINT
+    permissions SMALLINT,
+    finds INT,
+    first_finds INT
 );
 
 CREATE TABLE ducks (
     id SERIAL PRIMARY KEY,
     duck_key VARCHAR(10),
     location_description TEXT,
-    date_placed TIMESTAMP
-);
-
-CREATE TABLE sessions (
-    session_id VARCHAR(25) PRIMARY KEY,
-    user_id INT,
-    expiry TIMESTAMP
+    date_placed TIMESTAMP,
+    first_user INT NULL DEFAULT NULL
 );
 
 CREATE TABLE finds (
