@@ -83,6 +83,7 @@ async function entry(req, res, duckCode){
 	// Check if duck not yet been found and increment user's first_finds
 	if(findCheck.length == 0){ 
 		await sql`update users set first_finds = first_finds + 1 where id = ${req.session.user.id}`;
+		await sql`update ducks set first_user = ${req.session.user.id} where id = ${duckCheck[0].id}`;
 	}
 	// Increment user's finds
 	await sql`update users set finds = finds + 1 where id = ${req.session.user.id}`;
