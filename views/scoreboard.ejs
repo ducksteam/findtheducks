@@ -6,7 +6,21 @@
 <body>
     <%- include("./templates/header", {authorised: authorised}) %>
     <div class="content">
-        
+        <h1>Scoreboard</h1>
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>Finds</th>
+                <th>First Finds</th>
+            </tr>
+            <% scoreboard.forEach(user => { %>
+                <tr>
+                    <td><%= user.username %></td>
+                    <td><%= user.finds %></td>
+                    <td><%= user.first_finds %></td>
+                </tr>
+            <% }); %>
+        </table>
     </div>
 </body>
 </html>

@@ -62,21 +62,38 @@ async function login(req, res, email, password) {
 		return "Incorrect password";
 	}
 	
+	// Set session variables
 	req.session.user = user[0];
 	req.session.authorised = true;
 }
 
 async function entry(req, res, duckCode){
+	// Check duck code is valid
 	let duckCheck = await sql`select * from ducks where duck_key = ${duckCode}`;
 	if (duckCheck.length === 0) {
 		return "Duck not found";
 	}
-	let findCheck = await sql`select * from finds where user_id = ${req.session.user.id} and duck_id = ${duckCheck[0].id}`;
-	if (findCheck.length !== 0) {
-		return "Duck already found";
+	// Check duck has not already been found by user
+	let findCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id}`;
+	findCheck.forEach(find => {
+		if(find.user_id === req.session.user.id){
+			return "Duck already found";
+		}
+	});
+	// Check if duck not yet been found and increment user's first_finds
+	if(findCheck.length == 0){ 
+		await sql`update users set first_finds = first_finds + 1 where id = ${req.session.user.id}`;
 	}
+	// Increment user's finds
+	await sql`update users set finds = finds + 1 where id = ${req.session.user.id}`;
+	// Insert find into database
 	await sql`insert into finds (user_id, duck_id, find_date) VALUES (${req.session.user.id}, ${duckCheck[0].id}, NOW())`;
 	return "Success!";
 }
 
-export { register, login, entry };
+async function getScoreboard(){
+	let scoreboard = await sql`select username, finds, first_finds from users order by first_finds desc, finds desc`;
+	return scoreboard;
+}
+
+export { register, login, entry, getScoreboard };

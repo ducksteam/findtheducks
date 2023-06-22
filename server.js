@@ -2,7 +2,7 @@ import express from "express";
 import session from "express-session";
 import userRouter from "./routes/users.js";
 import bodyParser from "body-parser";
-import { entry } from "./functions.js";
+import { entry, getScoreboard } from "./functions.js";
 
 const app = express(); // Create express app
 
@@ -34,12 +34,12 @@ app.get("/entry", (req, res) => { // Serve entry page
 	}
 });
 
-app.get("/scoreboard", (req, res) => { // Serve scoreboard page
-	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised });
+app.get("/scoreboard", async (req, res) => { // Serve scoreboard page
+	let scoreboard = await getScoreboard();
+	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised, scoreboard });
 });
 
 app.post("/entry", async (req, res) => { // Handle entry form submission
-	console.log(req.body.duckCode);
 	const status = await entry(req, res, req.body.duckCode);
 	res.redirect("/entry?status=" + encodeURIComponent(status));
 });
