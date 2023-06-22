@@ -3,10 +3,12 @@ const router = express.Router();
 import { register, login } from "../functions.js";
 import sql from "../db.js";
 
-router.get("/profile", (req, res) => { // Serve profile page
+router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
-		let userFinds = `SELECT (ducks.location_description, ducks.first_user, finds.find_date) FROM ducks INNER JOIN finds ON finds.duck_id = ducks.id WHERE finds.user_id = ${req.session.user.id}`;
-		let firstFinds = `SELECT first_finds FROM users WHERE id = ${req.session.user.id}`;
+		let userFinds = await sql`SELECT (ducks.location_description, ducks.first_user, finds.find_date) FROM ducks INNER JOIN finds ON finds.duck_id = ducks.id WHERE finds.user_id = ${req.session.user.id}`;
+		console.log(userFinds);
+		let firstFinds = await sql`SELECT first_finds FROM users WHERE id = ${req.session.user.id}`;
+		console.log(firstFinds);
 		res.render("users/profile", { pageTitle: "profile", username: req.session.user.username, authorised: req.session.authorised, userFinds, firstFinds });
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
