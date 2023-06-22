@@ -6,14 +6,14 @@
 <body>
     <%- include("../templates/header", {authorised: authorised}) %>
     <div class="content">
-        <h1><%- username %></h1> <
-        <h2>Update username</h2>
+        <h1><%- username %></h1>
+        <h3>Update username</h3>
         <p>Your username is only shown on the scoreboard.</p>
         <form action="/users/profile" method="POST">
-            <input type="text" name="username" placeholder=<% username %> required>
+            <input type="text" name="username" placeholder=<%= username %> required>
             <input type="submit" value="Update">
         </form>
-        <h2>Update password</h2>
+        <h3>Update password</h3>
         <form action="/users/password" method="POST">
             <label>Enter current password</label>
             <input type="password" name="oldPassword" required>
@@ -23,20 +23,13 @@
             <input type="password" name="confirmPassword" required>
             <input type="submit" value="Update">
         </form>
-        <h2>Ducks found</h2>
-        <p>You've found <b><%- userFinds.length %></b> ducks.</p>
-        <p>For <b><%- firstFinds %></b> of those, you were the first.</p>
+        <h3>Ducks found</h3>
+        <p>You've found <b><%- userFinds.length %></b> ducks.<br>For <b><%- firstFinds %></b> of those, you were the first.</p>
         <table>
             <th>Location Description</th>
             <th>Date Found</th>
             <th>First?</th>
-            <% userFinds.forEach((duck) => { %>
-            <tr>
-                <td><%- duck.locationDescription %></td>
-                <td><%- duck.dateFound %></td>
-                <td><%- (duck.first_user == username) ? "✓" : "x" %></td>
-            </tr>
-            <% }); %>
+            <%- userFinds %>
         </table>
     </div>
 </body>
