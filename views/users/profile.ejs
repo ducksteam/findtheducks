@@ -6,11 +6,11 @@
 <body>
     <%- include("../templates/header", {authorised: authorised}) %>
     <div class="content">
-        <h1><%- username %></h1>
+        <h1><%- user.username %></h1>
         <h3>Update username</h3>
         <p>Your username is only shown on the scoreboard.</p>
         <form action="/users/profile" method="POST">
-            <input type="text" name="username" placeholder=<%= username %> required>
+            <input type="text" name="username" placeholder=<%= user.username %> required>
             <input type="submit" value="Update">
         </form>
         <h3>Update password</h3>
@@ -24,12 +24,20 @@
             <input type="submit" value="Update">
         </form>
         <h3>Ducks found</h3>
-        <p>You've found <b><%- userFinds.length %></b> ducks.<br>For <b><%- firstFinds %></b> of those, you were the first.</p>
+        <p>You've found <b><%- parsedFinds.length %></b> ducks.<br>For <b><%- firstFinds %></b> of those, you were the first.</p>
         <table>
+            <tr>
             <th>Location Description</th>
             <th>Date Found</th>
             <th>First?</th>
-            <%- userFinds %>
+            </tr>
+            <% for(let i=0; i<parsedFinds.length; i++) { %>
+                <tr>
+                <td><%= parsedFinds[i].location %></td>
+                <td><%= parsedFinds[i].date %></td>
+                <td><%= parsedFinds[i] ? "✓" : "x" %></td>
+                </tr>
+            <% } %>
         </table>
     </div>
 </body>

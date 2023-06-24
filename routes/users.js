@@ -5,11 +5,25 @@ import sql from "../db.js";
 
 router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
-		let userFinds = await sql`SELECT (ducks.location_description, ducks.first_user, finds.find_date) FROM ducks INNER JOIN finds ON finds.duck_id = ducks.id WHERE finds.user_id = ${req.session.user.id}`;
-		console.log(userFinds);
-		let firstFinds = await sql`SELECT first_finds FROM users WHERE id = ${req.session.user.id}`;
-		console.log(firstFinds);
-		res.render("users/profile", { pageTitle: "profile", username: req.session.user.username, authorised: req.session.authorised, userFinds, firstFinds });
+		let parsedFinds = [];
+		let firstFinds = 0;
+		const finds = await sql`SELECT * FROM finds WHERE user_id = ${req.session.user.id}`;
+		for(const find of finds){
+			let first = await sql`select first_user from ducks where id = ${find.duck_id}`;
+			console.log(first);
+			let duck = await sql`select location_description from ducks where id = ${find.duck_id}`;
+			console.log(duck);	
+			parsedFinds.push({
+				location: duck[0].location_description,
+				date: new Date(find.find_date).toLocaleDateString("en-NZ"),
+				first: (first[0].first_user == req.session.user.id) ? true : false
+			});
+			if(first[0].first_user == req.session.user.id){
+				firstFinds++;
+			}
+		}
+		console.log(parsedFinds);
+		res.render("users/profile", { pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, parsedFinds, firstFinds });
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
