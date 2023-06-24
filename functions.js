@@ -97,4 +97,23 @@ async function getScoreboard(){
 	return scoreboard;
 }
 
-export { register, login, entry, getScoreboard };
+async function getProfile(req){
+	let parsedFinds = [];
+	let firstFinds = 0;
+	const finds = await sql`SELECT * FROM finds WHERE user_id = ${req.session.user.id}`;
+	for(const find of finds){
+		let first = await sql`select first_user from ducks where id = ${find.duck_id}`;
+		let duck = await sql`select location_description from ducks where id = ${find.duck_id}`;
+		parsedFinds.push({
+			location: duck[0].location_description,
+			date: new Date(find.find_date).toLocaleDateString("en-NZ"),
+			first: (first[0].first_user == req.session.user.id) ? true : false
+		});
+		if(first[0].first_user == req.session.user.id){
+			firstFinds++;
+		}
+	}
+	return {parsedFinds, firstFinds};
+}
+
+export { register, login, entry, getScoreboard, getProfile };
