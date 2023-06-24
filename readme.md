@@ -16,7 +16,7 @@
 - [x] Logging out
 - [x] Duck entry
 - [x] Scoreboard
-- [ ] Profile info
+- [x] Profile info
 - [ ] New duck codes
 - [ ] Email verification
 - [ ] Improve UI
