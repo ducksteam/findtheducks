@@ -8,11 +8,11 @@
     <div class="content">
         <div class="login_box">
             <h2>join the duckers</h2>
-            <% if (errorMsg == "undefined") {
-            } else if ( errorMsg !== "Success!") { %>
-                <div class="alert alert-danger"><%= errorMsg %></div>
+            <% if (status == "undefined") {
+            } else if ( status !== "Success!") { %>
+                <div class="alert alert-danger"><%= status %></div>
             <% } else { %>
-                <div class="alert alert-success"><%= errorMsg %></div>
+                <div class="alert alert-success"><%= status %></div>
             <% } %>
             <form action="/users/register" method="post">
                 <div class="user_box">

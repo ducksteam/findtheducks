@@ -13,16 +13,16 @@ router.get("/profile", async (req, res) => { // Serve profile page
 });
 
 router.get("/register", (req, res) => { // Serve register page
-	const errorMsg = decodeURIComponent(req.query.status) || "";
-	res.render("users/register", { errorMsg, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions });
+	const status = decodeURIComponent(req.query.status) || "";
+	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions });
 });
 
 router.get("/login", (req, res) => { // Serve login page
 	if(req.session.authorised){
 		res.redirect("profile");
 	} else {
-		const errorMsg = decodeURIComponent(req.query.status) || "";
-		res.render("users/login", { errorMsg, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions });
+		const status = decodeURIComponent(req.query.status) || "";
+		res.render("users/login", { status, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions });
 	}
 });
 
