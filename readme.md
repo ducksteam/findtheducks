@@ -23,4 +23,6 @@
 - [ ] Rate limiting duck entry
 - [ ] Password reset
 - [ ] Update display name
+- [ ] Profile pictures
 - [x] Custom domain
+- [ ] Custom profile pictures
