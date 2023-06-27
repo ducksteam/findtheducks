@@ -17,7 +17,7 @@
 - [x] Duck entry
 - [x] Scoreboard
 - [x] Profile info
-- [ ] New duck codes
+- [x] New duck codes
 - [ ] Email verification
 - [ ] Improve UI
 - [ ] Rate limiting duck entry
