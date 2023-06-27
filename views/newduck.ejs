@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <%- include("./templates/head") %>
+</head>
+<body>
+    <%- include("./templates/header", {authorised, permissions}) %>
+    <div class="content">
+        <h1>Create duck</h1>
+        <% if (status == "undefined") {
+        } else if ( status !== "Success!") { %>
+            <div class="alert alert-danger"><%= status %></div>
+        <% } else { %>
+            <div class="alert alert-success"><%= status %></div>
+        <% } %>
+        <form action="/newduck" method="post">
+            <label>location description</label>
+            <br>
+            <input type="text" name="location" placeholder="keep it short - 99 chars" required>
+            <br>
+            <label>code</label>
+            <br>
+            <input type="text" name="code" placeholder="up to 10 characters" required>
+            <br>
+            <input type="submit" value="Create">
+        </form>
+    </div>
+</body>
+</html>

@@ -61,10 +61,11 @@ async function login(req, res, email, password) {
 	if (!passwordCheck) {
 		return "Incorrect password";
 	}
-	
+
 	// Set session variables
 	req.session.user = user[0];
 	req.session.authorised = true;
+	req.session.permissions = user[0].permissions;
 }
 
 async function entry(req, res, duckCode){
@@ -116,4 +117,17 @@ async function getProfile(req){
 	return {parsedFinds, firstFinds};
 }
 
-export { register, login, entry, getScoreboard, getProfile };
+async function insertDuck(req, code, loc){
+	const duckQuery = await sql`SELECT * FROM ducks WHERE duck_key = ${code}`;
+	if(duckQuery.length !== 0){
+		return "Code already exists";
+	}
+	try {
+		await sql`INSERT INTO ducks (duck_key, location_description, date_placed) VALUES (${code}, ${loc}, NOW())`;
+		return "Success!";
+	} catch (err) {
+		return "Error inserting into database";
+	}
+}
+
+export { register, login, entry, getScoreboard, getProfile, insertDuck };
