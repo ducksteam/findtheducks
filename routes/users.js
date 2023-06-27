@@ -6,7 +6,7 @@ import sql from "../db.js";
 router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
 		const {parsedFinds, firstFinds} = await getProfile(req);
-		res.render("users/profile", { pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, parsedFinds, firstFinds });
+		res.render("users/profile", { pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds });
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
@@ -14,7 +14,7 @@ router.get("/profile", async (req, res) => { // Serve profile page
 
 router.get("/register", (req, res) => { // Serve register page
 	const errorMsg = decodeURIComponent(req.query.status) || "";
-	res.render("users/register", { errorMsg, pageTitle: "sign up", authorised: req.session.authorised });
+	res.render("users/register", { errorMsg, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions });
 });
 
 router.get("/login", (req, res) => { // Serve login page
@@ -22,7 +22,7 @@ router.get("/login", (req, res) => { // Serve login page
 		res.redirect("profile");
 	} else {
 		const errorMsg = decodeURIComponent(req.query.status) || "";
-		res.render("users/login", { errorMsg, pageTitle: "sign in", authorised: req.session.authorised });
+		res.render("users/login", { errorMsg, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions });
 	}
 });
 
