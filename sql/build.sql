@@ -9,7 +9,10 @@ CREATE TABLE users (
     password_hash VARCHAR(60),
     permissions SMALLINT,
     finds INT,
-    first_finds INT
+    first_finds INT,
+    verification_id VARCHAR(36) NULL,
+    verified BOOLEAN DEFAULT FALSE,
+    verification_date TIMESTAMP NULL,
 );
 
 CREATE TABLE ducks (
