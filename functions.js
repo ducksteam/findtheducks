@@ -68,6 +68,11 @@ async function login(req, res, email, password) {
 		return "Incorrect password";
 	}
 
+	// Check email is verified
+	if (!user[0].verified) {
+		return "Email not verified";
+	}
+
 	// Set session variables
 	req.session.user = user[0];
 	req.session.authorised = true;
