@@ -1,5 +1,8 @@
 import bcrypt from "bcrypt";
 import Filter from "bad-words";
+import { v4 as uuidv4 } from "uuid";
+import FormData from "form-data";
+import Mailgun from "mailgun.js";
 import sql from "./db.js";
 
 async function register(email, username, password, confirmPassword) {
@@ -32,6 +35,9 @@ async function register(email, username, password, confirmPassword) {
 	if (usernameCheck.length !== 0) {
 		return "Username already in use";
 	}
+
+	// Send verification email
+	sendVerificationEmail();
 
 	// Hash password and insert into database
 	try {
@@ -128,6 +134,28 @@ async function insertDuck(req, code, loc){
 	} catch (err) {
 		return "Error inserting into database";
 	}
+}
+
+async function sendVerificationEmail(email, username) {
+	const uuid = uuidv4();
+	await sql`insert into users (verification_id, verification_date) values (${uuid}, NOW())`;
+	const mailgun = new Mailgun(FormData);
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY });
+	mg.messages.create("https://api.mailgun.net/v3/mg.findtheducks.live", {
+		from: "Find The Ducks <noreply@findtheducks.live>",
+		to: email,
+		subject: "Welcome to the duckers",
+		text: "Welcome to the duckers!",
+		html: `
+		<h1>Welcome to the duckers!</h1>
+		<h4>Hi ${username},</h4>
+		<p>Thanks for ducking with us this term.</p>
+		<p>Before you can start, you need to verify your email address.</p>
+		<p>Click <a href="https://findtheducks.live/users/verify?uuid=${uuid}">here</a> to verify your email.</p>
+		<p>This link will expire in 30 minutes. If you need a new one, <a href="https://findtheducks.live/resend">click here</a>.</p>
+		<p>Happy ducking!</p>`
+	}).then(msg => console.log(msg))
+		.catch(err => console.log(err));
 }
 
 export { register, login, entry, getScoreboard, getProfile, insertDuck };
