@@ -5,12 +5,13 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "devStart": "nodemon server.js -e js,ejs,css,html"
+    "devStart": "nodemon -r dotenv/config server.js -e js,ejs,css,html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "dotenv": "^16.3.1",
     "ejs-lint": "^2.0.0",
     "eslint": "^8.43.0",
     "nodemon": "^2.0.22"
