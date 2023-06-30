@@ -31,6 +31,21 @@ router.get("/logout", (req, res) => { // Handle logout
 	res.redirect("login?status=" + encodeURIComponent("Logged out"));
 });
 
+router.get("/verify", (req, res) => { // Handle email verification
+	const uuid = req.query.uuid; // Get verification ID from query string
+	if(uuid){ 
+		const user = sql`SELECT * FROM users WHERE verification_id = ${uuid}`; // Get user with matching verification ID
+		if(new Date(user[0].verification_date + 30*60*1000) > Date.now()){ // Check if verification link has not expired
+			sql`UPDATE users SET verification_id = NULL, verification_date = NULL, verified = TRUE WHERE id = ${user[0].id}`; // Update user to verified
+			res.redirect("login?status=" + encodeURIComponent("Email verified"));
+		} else {
+			res.redirect("resend?status=" + encodeURIComponent("Verification link expired"));
+		}
+	} else {
+		res.redirect("resend?status=" + encodeURIComponent("Invalid verification link"));
+	}
+});
+
 router.post("/profile", (req, res) => { // Handle username update form submission
 	if(req.session.authorised){
 		sql`UPDATE users SET username = ${req.body.username} WHERE id = ${req.session.user.id}`.then(() => {
