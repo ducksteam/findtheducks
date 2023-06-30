@@ -12,7 +12,7 @@ CREATE TABLE users (
     first_finds INT,
     verification_id VARCHAR(36) NULL,
     verified BOOLEAN DEFAULT FALSE,
-    verification_date TIMESTAMP NULL,
+    verification_date TIMESTAMP NULL
 );
 
 CREATE TABLE ducks (
