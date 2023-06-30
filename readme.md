@@ -23,6 +23,7 @@
 - [ ] Rate limiting duck entry
 - [ ] Password reset
 - [ ] Update display name
+- [ ] Transition to number-based error codes
 - [ ] Profile pictures
 - [x] Custom domain
 - [ ] Custom profile pictures
