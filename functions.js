@@ -36,13 +36,11 @@ async function register(email, username, password, confirmPassword) {
 		return "Username already in use";
 	}
 
-	// Send verification email
-	sendVerificationEmail();
-
 	// Hash password and insert into database
 	try {
 		const passwordHash = await bcrypt.hash(password, 10);
 		await sql`insert into users (email, username, password_hash, permissions) values (${email}, ${username}, ${passwordHash}, 0)`;
+		await sendVerificationEmail(email, username);
 		return "Success!";
 	} catch (err) {
 		return "Error inserting into database";
@@ -143,10 +141,10 @@ async function insertDuck(req, code, loc){
 
 async function sendVerificationEmail(email, username) {
 	const uuid = uuidv4();
-	await sql`insert into users (verification_id, verification_date) values (${uuid}, NOW())`;
+	await sql`update users SET verification_id = ${uuid}, verification_date = NOW() where username = ${username}`;
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY });
-	mg.messages.create("https://api.mailgun.net/v3/mg.findtheducks.live", {
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
+	mg.messages.create("mg.findtheducks.live", {
 		from: "Find The Ducks <noreply@findtheducks.live>",
 		to: email,
 		subject: "Welcome to the duckers",
