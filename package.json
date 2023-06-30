@@ -5,7 +5,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "devStart": "nodemon server.js -e js,ejs,css,html"
+    "start": "node -r dotenv/config server.js",
+    "devStart": "nodemon -r dotenv/config server.js -e js,ejs,css,html"
   },
   "keywords": [],
   "author": "",
