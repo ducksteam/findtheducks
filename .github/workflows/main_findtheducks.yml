@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'findtheducks'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_09089901AE90449F979E0DDC151F1D78 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6705DC1B3FB6404CB4FDFBC4255106E4 }}
           package: .
