@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import FormData from "form-data";
 import Mailgun from "mailgun.js";
 import sql from "./db.js";
+import duckFact from "./duckFacts.js";
 
 async function register(email, username, password, confirmPassword) {
 	const filter = new Filter();
@@ -148,17 +149,11 @@ async function sendVerificationEmail(email, username) {
 		from: "Find The Ducks <noreply@findtheducks.live>",
 		to: email,
 		subject: "Welcome to the duckers",
-		text: "Welcome to the duckers!",
-		html: `
-		<h1>Welcome to the duckers!</h1>
-		<h4>Hi ${username},</h4>
-		<p>Thanks for ducking with us this term.</p>
-		<p>Before you can start, you need to verify your email address.</p>
-		<p>Click <a href="https://findtheducks.live/users/verify?uuid=${uuid}">here</a> to verify your email.</p>
-		<p>This link will expire in 30 minutes. If you need a new one, <a href="https://findtheducks.live/resend">click here</a>.</p>
-		<p>Happy ducking!</p>`
+		template: "verification",
+		"h:X-Mailgun-Variables": {uuid: uuid, duckFact: duckFact()}
 	}).then(msg => console.log(msg))
-		.catch(err => console.log(err));
+		.catch(err => {return err;});
+	return "Success!";
 }
 
-export { register, login, entry, getScoreboard, getProfile, insertDuck };
+export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail };
