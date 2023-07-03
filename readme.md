@@ -24,6 +24,7 @@
 - [ ] Password reset
 - [ ] Update display name
 - [ ] Transition to number-based error codes
+- [ ] Random duck 'facts' in footer
 - [ ] Profile pictures
 - [x] Custom domain
 - [ ] Custom profile pictures
