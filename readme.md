@@ -18,7 +18,7 @@
 - [x] Scoreboard
 - [x] Profile info
 - [x] New duck codes
-- [ ] Email verification
+- [x] Email verification
 - [ ] Improve UI
 - [ ] Rate limiting duck entry
 - [ ] Password reset
