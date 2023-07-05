@@ -157,7 +157,10 @@ async function sendVerificationEmail(email, username) {
 		template: "verification",
 		"h:X-Mailgun-Variables": JSON.stringify({uuid: uuid, duckFact: duckFact()})
 	}).then(msg => console.log(msg))
-		.catch(err => {return err;});
+		.catch(err => {
+			console.log(err);
+			return err;
+		});
 	return "Success!";
 }
 
