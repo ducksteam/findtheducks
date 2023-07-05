@@ -34,7 +34,7 @@ router.post("/newduck", async (req, res) => { // Handle new duck form submission
 		const status = await insertDuck(req, req.body.code, req.body.location);
 		res.redirect("newduck?status=" + encodeURIComponent(status));
 	} else {
-		res.status(403).render("errors/403", { pageTitle: "403", authorised: req.session.authorised, permissions: req.session.permissions });
+		res.status(403).render("errors/generic", { errorCode: 403, message: "Sorry, you don't have permission to view this page.", pageTitle: "403", authorised: req.session.authorised, permissions: req.session.permissions });
 	}
 });
 

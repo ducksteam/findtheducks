@@ -29,6 +29,10 @@ app.use(session({ // Set up session
 app.use("/", indexRouter);
 app.use("/users", userRouter); // Use user router
 
+app.get("*", (req, res) => { // 404
+	res.status(404).render("errors/generic", { errorCode: 404, message: "If it looks like a duck, quacks like a duck, it's a duck. But I don't think this is a duck.", pageTitle: 404, authorised: req.session.authorised, permissions: req.session.permissions});
+});
+
 app.use(express.static("public")); // Serve static files
 
 export default app; // Export app for testing
