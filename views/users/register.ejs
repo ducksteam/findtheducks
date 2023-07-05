@@ -12,7 +12,7 @@
             } else if ( status !== "Success!") { %>
                 <div class="alert alert-danger"><%= status %></div>
             <% } else { %>
-                <div class="alert alert-success"><%= status %></div>
+                <div class="alert alert-success">Check your email (and spam) for a verification link.</div>
             <% } %>
             <form action="/users/register" method="post">
                 <div class="user_box">
@@ -35,6 +35,7 @@
                 <button type="submit">enter the duckening</button>
             </form>
             <p>already a ducker? <a href="/users/login">sign in here</a></p>
+            <p>can't find your verification email? <a href="/users/resend">get another here</a></p>
         </div>
     </div>
 </body>

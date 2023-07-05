@@ -41,10 +41,15 @@ async function register(email, username, password, confirmPassword) {
 	try {
 		const passwordHash = await bcrypt.hash(password, 10);
 		await sql`insert into users (email, username, password_hash, permissions) values (${email}, ${username}, ${passwordHash}, 0)`;
+	} catch (err) {
+		return "Error inserting into database";
+	}
+	try {
 		await sendVerificationEmail(email, username);
 		return "Success!";
 	} catch (err) {
-		return "Error inserting into database";
+		console.log(err);
+		return "Error sending verification email";
 	}
 }
 
@@ -150,7 +155,7 @@ async function sendVerificationEmail(email, username) {
 		to: email,
 		subject: "Welcome to the duckers",
 		template: "verification",
-		"h:X-Mailgun-Variables": {uuid: uuid, duckFact: duckFact()}
+		"h:X-Mailgun-Variables": JSON.stringify({uuid: uuid, duckFact: duckFact()})
 	}).then(msg => console.log(msg))
 		.catch(err => {return err;});
 	return "Success!";
