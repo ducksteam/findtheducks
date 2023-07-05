@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import Filter from "bad-words";
+import { v4 as uuidv4 } from "uuid";
+import FormData from "form-data";
+import Mailgun from "mailgun.js";
 import sql from "./db.js";
+import duckFact from "./duckFacts.js";
 
 async function register(email, username, password, confirmPassword) {
 	const filter = new Filter();
@@ -37,9 +41,15 @@ async function register(email, username, password, confirmPassword) {
 	try {
 		const passwordHash = await bcrypt.hash(password, 10);
 		await sql`insert into users (email, username, password_hash, permissions) values (${email}, ${username}, ${passwordHash}, 0)`;
-		return "Success!";
 	} catch (err) {
 		return "Error inserting into database";
+	}
+	try {
+		await sendVerificationEmail(email, username);
+		return "Success!";
+	} catch (err) {
+		console.log(err);
+		return "Error sending verification email";
 	}
 }
 
@@ -60,6 +70,11 @@ async function login(req, res, email, password) {
 	const passwordCheck = await bcrypt.compare(password, user[0].password_hash);
 	if (!passwordCheck) {
 		return "Incorrect password";
+	}
+
+	// Check email is verified
+	if (!user[0].verified) {
+		return "Email not verified";
 	}
 
 	// Set session variables
@@ -130,4 +145,20 @@ async function insertDuck(req, code, loc){
 	}
 }
 
-export { register, login, entry, getScoreboard, getProfile, insertDuck };
+async function sendVerificationEmail(email, username) {
+	const uuid = uuidv4();
+	await sql`update users SET verification_id = ${uuid}, verification_date = NOW() where username = ${username}`;
+	const mailgun = new Mailgun(FormData);
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
+	mg.messages.create("mg.findtheducks.live", {
+		from: "Find The Ducks <noreply@findtheducks.live>",
+		to: email,
+		subject: "Welcome to the duckers",
+		template: "verification",
+		"h:X-Mailgun-Variables": JSON.stringify({uuid: uuid, duckFact: duckFact()})
+	}).then(msg => console.log(msg))
+		.catch(err => {return err;});
+	return "Success!";
+}
+
+export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail };
