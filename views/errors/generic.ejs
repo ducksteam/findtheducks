@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <%- include("../templates/head") %>
+</head>
+<body>
+    <%- include("../templates/header", {authorised, permissions}) %>
+    <div class="content">
+        <h1><%= message %></h1>
+        <h2><%= error.status %></h2>
+        <pre><%= error.stack %></pre>
+    </div>
+</body>
+</html>

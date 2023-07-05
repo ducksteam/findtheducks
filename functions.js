@@ -109,7 +109,7 @@ async function entry(req, res, duckCode){
 }
 
 async function getScoreboard(){
-	let scoreboard = await sql`select username, finds, first_finds from users order by first_finds desc, finds desc`;
+	let scoreboard = await sql`select username, finds, first_finds from users where permissions = 0 order by first_finds desc, finds desc`;
 	return scoreboard;
 }
 
