@@ -8,6 +8,8 @@ import favicon from "serve-favicon";
 import indexRouter from "./routes/index.js";
 import userRouter from "./routes/users.js";
 
+import duckFact from "./duckFacts.js";
+
 const app = express(); // Create express app
 
 app.use(favicon("public/favicon.ico")); // Serve favicon
@@ -32,7 +34,7 @@ app.use("/", indexRouter);
 app.use("/users", userRouter); // Use user router
 
 app.get("*", (req, res) => { // 404
-	res.status(404).render("errors/generic", { errorCode: 404, message: "If it looks like a duck, quacks like a duck, it's a duck. But I don't think this is a duck.", pageTitle: 404, authorised: req.session.authorised, permissions: req.session.permissions});
+	res.status(404).render("errors/generic", { errorCode: 404, message: "If it looks like a duck, quacks like a duck, it's a duck. But I don't think this is a duck.", pageTitle: 404, authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact()});
 });
 
 app.use(express.static("public")); // Serve static files

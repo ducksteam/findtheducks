@@ -15,6 +15,7 @@ ul {
     margin-left: 10%;
     margin-right: 30%;
     margin-top: 100px;
+    min-height: calc(100vh - 60px);
 }
 
 h3 {
@@ -62,4 +63,20 @@ p {
     .navbar-home, .navbar-user {
         float: none;
     }
+}
+
+footer {
+    background-color: darkgray;
+    border-color: #000;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+#duckFact {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    text-align: center;
 }

@@ -2,13 +2,14 @@ import express from "express";
 const router = express.Router();
 import { register, login, getProfile, sendVerificationEmail } from "../functions.js";
 import sql from "../db.js";
+import duckFact from "../duckFacts.js";
 import bcrypt from "bcrypt";
 
 router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
 		const {parsedFinds, firstFinds} = await getProfile(req);
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds });
+		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact() });
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
@@ -16,7 +17,7 @@ router.get("/profile", async (req, res) => { // Serve profile page
 
 router.get("/register", (req, res) => { // Serve register page
 	const status = decodeURIComponent(req.query.status) || "";
-	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions });
+	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 });
 
 router.get("/login", (req, res) => { // Serve login page
@@ -24,7 +25,7 @@ router.get("/login", (req, res) => { // Serve login page
 		res.redirect("profile");
 	} else {
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("users/login", { status, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions });
+		res.render("users/login", { status, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 	}
 });
 
@@ -59,7 +60,7 @@ router.get("/verify", async (req, res) => { // Handle email verification
 
 router.get("/resend", (req, res) => { // Serve resend verification page
 	const status = decodeURIComponent(req.query.status) || "";
-	res.render("users/resend", { status, pageTitle: "resend verification", authorised: req.session.authorised, permissions: req.session.permissions });
+	res.render("users/resend", { status, pageTitle: "resend verification", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 });
 
 router.post("/resend", async (req, res) => { // Handle resend verification form submission
