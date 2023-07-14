@@ -3,6 +3,7 @@ import session from "express-session";
 import bodyParser from "body-parser";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
+import favicon from "serve-favicon";
 
 import indexRouter from "./routes/index.js";
 import userRouter from "./routes/users.js";
@@ -11,6 +12,7 @@ import duckFact from "./duckFacts.js";
 
 const app = express(); // Create express app
 
+app.use(favicon("public/favicon.ico")); // Serve favicon
 app.use(logger("dev"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form submissions

@@ -3,11 +3,13 @@ const router = express.Router();
 import { register, login, getProfile, sendVerificationEmail } from "../functions.js";
 import sql from "../db.js";
 import duckFact from "../duckFacts.js";
+import bcrypt from "bcrypt";
 
 router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
 		const {parsedFinds, firstFinds} = await getProfile(req);
-		res.render("users/profile", { pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact() });
+		const status = decodeURIComponent(req.query.status) || "";
+		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact() });
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
@@ -93,6 +95,21 @@ router.post("/login", async (req, res) => { // Handle login form submission
 		res.redirect("profile");
 	} else {
 		res.redirect("/users/login?status=" + encodeURIComponent(status));
+	}
+});
+
+router.post("/password", async (req, res) => { // Handle password update form submission
+	if(req.session.authorised){
+		const { oldPassword, password, confirmPassword } = req.body;
+		if (password !== confirmPassword) return res.redirect("profile?status=" + encodeURIComponent("Passwords do not match"));
+		if (password == oldPassword) return res.redirect("profile?status=" + encodeURIComponent("New password cannot be the same as the old password"));
+		const hash = await bcrypt.hash(password, 10);
+		try {
+			await sql`UPDATE users SET password_hash = ${hash} WHERE id = ${req.session.user.id}`;
+		} catch (err) {
+			return res.redirect("profile?status=" + encodeURIComponent("Error updating password in database"));
+		}
+		res.redirect("profile?status=" + encodeURIComponent("Success!"));
 	}
 });
 
