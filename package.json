@@ -27,10 +27,11 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "form-data": "^4.0.0",
-    "mailgun.js": "^9.1.1",
-    "postgres": "^3.3.5",
-    "uuid": "^9.0.0",
     "http-errors": "^2.0.0",
-    "morgan": "^1.10.0"
+    "mailgun.js": "^9.1.1",
+    "morgan": "^1.10.0",
+    "postgres": "^3.3.5",
+    "serve-favicon": "^2.5.0",
+    "uuid": "^9.0.0"
   }
 }
