@@ -40,7 +40,7 @@ p {
 .navbar-link {
     display: block;
     text-decoration: none;
-    padding: 19px 15px;
+    padding: 16px 15px;
     font-size: 20px;
     font-weight: bold;
     color: #fff;
@@ -59,6 +59,22 @@ p {
     margin-right: 20px;
 }
 
+.formItem {
+    margin-bottom: 12px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+.instagramIcon {
+    font-size: 44px !important;
+    color:#000;
+    padding-top: 20px;
+    text-align: center;
+    width: 100%;
+}
+
 @media screen and ( max-width: 700px ) {
     .navbar-home, .navbar-user {
         float: none;
@@ -71,12 +87,33 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
+    display: block;
 }
 
 #duckFact {
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: 60px;
-    padding-bottom: 60px;
+    padding-top: 10px;
+    padding-bottom: 40px;
     text-align: center;
+}
+
+form {
+    margin-bottom: 10px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table {
+    width: 70%;
+}
+
+.scoreboardUsername {
+    text-align: left;
+}
+
+.scoreboard-stat {
+    width: 10%;
 }
