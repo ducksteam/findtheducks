@@ -67,6 +67,14 @@ label {
     margin-right: 10px;
 }
 
+.instagramIcon {
+    font-size: 44px !important;
+    color:#000;
+    padding-top: 20px;
+    text-align: center;
+    width: 100%;
+}
+
 @media screen and ( max-width: 700px ) {
     .navbar-home, .navbar-user {
         float: none;
@@ -79,12 +87,13 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
+    display: block;
 }
 
 #duckFact {
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: 60px;
-    padding-bottom: 60px;
+    padding-top: 10px;
+    padding-bottom: 40px;
     text-align: center;
 }
