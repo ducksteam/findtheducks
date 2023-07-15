@@ -19,12 +19,15 @@
 - [x] Profile info
 - [x] New duck codes
 - [x] Email verification
-- [ ] Improve UI
+- [x] Improve UI
+- [x] Update display name
+- [x] Random duck 'facts' in footer
+- [x] Custom domain
+
+- [ ] Fix mobile view
+- [ ] Add background image
 - [ ] Rate limiting duck entry
 - [ ] Password reset
-- [x] Update display name
 - [ ] Transition to number-based error codes
-- [ ] Random duck 'facts' in footer
 - [ ] Profile pictures
-- [x] Custom domain
 - [ ] Custom profile pictures
