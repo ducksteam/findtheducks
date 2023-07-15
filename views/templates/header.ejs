@@ -1,16 +1,22 @@
-<ul id="navbar">
-    <li class="navbar-home" id="home-link"><a class="navbar-link" href="/">Home</a></li>
-    <li class="navbar-home" ><a class="navbar-link" href="/scoreboard">Scoreboard</a></li>
-    <% if (permissions == 1) { %>
-    <li class="navbar-home" ><a class="navbar-link" href="/newduck">Duck Entry</a></li>
-    <% } else { %>
-    <li class="navbar-home" ><a class="navbar-link" href="/entry">Duck Entry</a></li>
-    <% } %>
-    <% if(authorised) {%>
-    <li class="navbar-user" id="profile-link"><a class="navbar-link" href="/users/profile">Profile</a></li>
-    <li class="navbar-user" ><a class="navbar-link" href="/users/logout">Logout</a></li>
-    <% } else { %>
-    <li class="navbar-user" ><a class="navbar-link" href="/users/register">Sign up</a></li>
-    <li class="navbar-user" ><a class="navbar-link" href="/users/login">Sign in</a></li>
-    <% } %>
-</ul> 
+<nav class="navbar">
+    <ul id="navbar-links">
+        <li class="navbar-home" id="home-link"><a class="navbar-link" href="/">Home</a></li>
+        <input type="checkbox" id="checkbox_toggle" />
+        <label for="checkbox_toggle" class="hamburger">&#9776;</label>
+        <div class="menu">
+            <li class="navbar-home" ><a class="navbar-link" href="/scoreboard">Scoreboard</a></li>
+            <% if (permissions == 1) { %>
+            <li class="navbar-home" ><a class="navbar-link" href="/newduck">Duck Entry</a></li>
+            <% } else { %>
+            <li class="navbar-home" ><a class="navbar-link" href="/entry">Duck Entry</a></li>
+            <% } %>
+            <% if(authorised) {%>
+            <li class="navbar-user" id="profile-link"><a class="navbar-link" href="/users/profile">Profile</a></li>
+            <li class="navbar-user" ><a class="navbar-link" href="/users/logout">Logout</a></li>
+            <% } else { %>
+            <li class="navbar-user" ><a class="navbar-link" href="/users/register">Sign up</a></li>
+            <li class="navbar-user" ><a class="navbar-link" href="/users/login">Sign in</a></li>
+            <% } %>
+        </div>
+    </ul>
+</nav>
