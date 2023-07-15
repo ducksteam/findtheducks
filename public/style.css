@@ -97,3 +97,23 @@ footer {
     padding-bottom: 40px;
     text-align: center;
 }
+
+form {
+    margin-bottom: 10px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table {
+    width: 70%;
+}
+
+.scoreboardUsername {
+    text-align: left;
+}
+
+.scoreboard-stat {
+    width: 10%;
+}
