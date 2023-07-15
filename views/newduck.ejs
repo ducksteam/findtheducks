@@ -14,14 +14,14 @@
             <div class="alert alert-success"><%= status %></div>
         <% } %>
         <form action="/newduck" method="post">
-            <label>location description</label>
-            <br>
-            <input type="text" name="location" placeholder="keep it short - 99 chars" required>
-            <br>
-            <label>code</label>
-            <br>
-            <input type="text" name="code" placeholder="up to 10 characters" required>
-            <br>
+            <div class="formItem">
+                <label>location description</label> <br>
+                <input type="text" name="location" placeholder="keep it short - 99 chars" required>
+            </div>
+            <div class="formItem">
+                <label>code</label> <br>
+                <input type="text" name="code" placeholder="up to 10 characters" required>
+            </div>
             <input type="submit" value="Create">
         </form>
     </div>
