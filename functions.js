@@ -81,6 +81,7 @@ async function login(req, res, email, password) {
 	req.session.user = user[0];
 	req.session.authorised = true;
 	req.session.permissions = user[0].permissions;
+	return "Success!";
 }
 
 async function entry(req, res, duckCode){
