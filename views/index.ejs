@@ -17,6 +17,14 @@
         <p>we'll hide one duck every day until we run out. we have quite a few</p>
         <h3>where?</h3>
         <p>everywhere on school grounds.</p>
+        <br>
+        <h3>stats</h3>
+        <% if (stats.showStats) { %>
+            <p>there are <b><%- stats.totalDucks %></b> ducks hidden. <b><%- stats.unfoundDucks %></b> have not been found at all.</p>
+            <p><b><%- stats.totalUsers %></b> players have found a total of <b><%- stats.totalFinds %></b> ducks.</p>    
+        <% } else {%>
+            <p>sign in to view stats</p>
+        <% } %>
     </div>
     <%- include("./templates/footer", {duckFact}) %>
 </body>

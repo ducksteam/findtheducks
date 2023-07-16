@@ -1,10 +1,30 @@
 import express from "express";
 const router = express.Router();
+
 import { entry, getScoreboard, insertDuck } from "../functions.js";
 import duckFact from "../duckFacts.js";
+import sql from "../db.js";
 
-router.get("/", (req, res) => { // Serve home page
-	res.render("index", { pageTitle: "home", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact()  });
+router.get("/", async (req, res) => { // Serve home page
+	let stats = {
+		totalDucks: 0,
+		unfoundDucks: 0,
+		totalUsers: 0,
+		totalFinds: 0,
+		showStats: false
+	};
+	if(req.session.authorised){
+		stats.showStats = true;
+		let totalDucks = await sql`SELECT COUNT(*) FROM ducks`;
+		let unfoundDucks = await sql`SELECT COUNT(*) FROM ducks WHERE first_user IS NULL`;
+		let totalUsers = await sql`SELECT COUNT(*) FROM users WHERE permissions = 0`;
+		let totalFinds = await sql`SELECT COUNT(*) FROM finds`;
+		stats.totalDucks = totalDucks[0].count;
+		stats.unfoundDucks = unfoundDucks[0].count;
+		stats.totalUsers = totalUsers[0].count;
+		stats.totalFinds = totalFinds[0].count;
+	}
+	res.render("index", { stats, pageTitle: "home", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact()  });
 });
 
 router.get("/entry", (req, res) => { // Serve entry page
