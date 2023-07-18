@@ -96,15 +96,14 @@ async function entry(req, res, duckCode){
 			return "Duck already found";
 		}
 	});
-	// Check if duck not yet been found and increment user's first_finds
+	// Check if duck not yet been found and change first finder on duck
 	if(findCheck.length == 0){ 
-		await sql`update users set first_finds = first_finds + 1 where id = ${req.session.user.id}`;
 		await sql`update ducks set first_user = ${req.session.user.id} where id = ${duckCheck[0].id}`;
 	}
-	// Increment user's finds
-	await sql`update users set finds = finds + 1 where id = ${req.session.user.id}`;
 	// Insert find into database
 	await sql`insert into finds (user_id, duck_id, find_date) VALUES (${req.session.user.id}, ${duckCheck[0].id}, NOW())`;
+	// Update scoreboard
+	await updateUserFinds();
 	return "Success!";
 }
 
