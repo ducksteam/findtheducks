@@ -40,8 +40,9 @@ async function register(email, username, password, confirmPassword) {
 	// Hash password and insert into database
 	try {
 		const passwordHash = await bcrypt.hash(password, 10);
-		await sql`insert into users (email, username, password_hash, permissions) values (${email}, ${username}, ${passwordHash}, 0)`;
+		await sql`insert into users (email, username, password_hash, permissions, finds, first_finds) values (${email}, ${username}, ${passwordHash}, 0, 0, 0)`;
 	} catch (err) {
+		console.log(err);
 		return "Error inserting into database";
 	}
 	try {
