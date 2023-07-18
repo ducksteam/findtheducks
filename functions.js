@@ -109,6 +109,7 @@ async function entry(req, res, duckCode){
 }
 
 async function getScoreboard(){
+	updateUserFinds();
 	let scoreboard = await sql`select username, finds, first_finds from users where permissions = 0 order by first_finds desc, finds desc`;
 	return scoreboard;
 }
@@ -162,6 +163,18 @@ async function sendVerificationEmail(email, username) {
 			return err;
 		});
 	return "Success!";
+}
+
+async function updateUserFinds() {
+	const finds = await sql`SELECT * FROM finds ORDER BY find_date ASC`; // Get all finds
+	for (const find of finds) { // For each find
+		const duck = await sql`SELECT * FROM ducks WHERE id = ${find.duck_id}`; // Get duck found
+		if (duck[0].first_user === find.user_id) { // If user was first to find duck, add one to first_finds and finds
+			await sql`UPDATE users SET first_finds = first_finds + 1, finds = finds + 1 WHERE id = ${find.user_id}`;
+		} else { // If user was not first to find duck, add one to finds
+			await sql`UPDATE users SET finds = finds + 1 WHERE id = ${find.user_id}`;
+		}
+	}
 }
 
 export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail };
