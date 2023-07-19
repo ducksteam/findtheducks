@@ -120,10 +120,12 @@ async function getProfile(req){
 	for(const find of finds){
 		let first = await sql`select first_user from ducks where id = ${find.duck_id}`;
 		let duck = await sql`select location_description from ducks where id = ${find.duck_id}`;
+		let obtainable = await sql`select obtainable from ducks where id = ${find.duck_id}`;
 		parsedFinds.push({
 			location: duck[0].location_description,
 			date: new Date(find.find_date).toLocaleDateString("en-NZ"),
-			first: (first[0].first_user == req.session.user.id) ? true : false
+			first: (first[0].first_user == req.session.user.id) ? true : false,
+			obtainable: obtainable[0].obtainable
 		});
 		if(first[0].first_user == req.session.user.id){
 			firstFinds++;

@@ -42,12 +42,14 @@
             <th>Location Description</th>
             <th>Date Found</th>
             <th>First?</th>
+            <th>Still there?</th>
             </tr>
             <% for(let i=0; i<parsedFinds.length; i++) { %>
                 <tr>
                 <td><%= parsedFinds[i].location %></td>
                 <td><%= parsedFinds[i].date %></td>
-                <td><%= parsedFinds[i] ? "✓" : "x" %></td>
+                <td><%= parsedFinds[i].first ? "✓" : "x" %></td>
+                <td><%= parsedFinds[i].obtainable ? "✓" : "x" %></td>
                 </tr>
             <% } %>
         </table>

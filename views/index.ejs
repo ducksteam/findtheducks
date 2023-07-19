@@ -23,7 +23,7 @@
         <br>
         <h3>stats</h3>
         <% if (stats.showStats) { %>
-            <p>there are <b><%- stats.totalDucks %></b> ducks hidden. <b><%- stats.unfoundDucks %></b> have not been found at all.</p>
+            <p><b><%- stats.totalDucks %></b> ducks have been placed, of which <b><%- stats.lostDucks %></b> have been removed, for a total of <b><%- stats.availableDucks %></b> still available. <b><%- stats.unfoundDucks %></b> have not been found at all, and are still available.</p>
             <p><b><%- stats.totalUsers %></b> players have found a total of <b><%- stats.totalFinds %></b> ducks.</p>    
         <% } else {%>
             <p>sign in to view stats</p>

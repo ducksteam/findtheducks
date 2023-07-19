@@ -8,6 +8,8 @@ import sql from "../db.js";
 router.get("/", async (req, res) => { // Serve home page
 	let stats = {
 		totalDucks: 0,
+		lostDucks: 0,
+		availableDucks: 0,
 		unfoundDucks: 0,
 		totalUsers: 0,
 		totalFinds: 0,
@@ -16,10 +18,13 @@ router.get("/", async (req, res) => { // Serve home page
 	if(req.session.authorised){
 		stats.showStats = true;
 		let totalDucks = await sql`SELECT COUNT(*) FROM ducks`;
-		let unfoundDucks = await sql`SELECT COUNT(*) FROM ducks WHERE first_user IS NULL`;
+		let lostDucks = await sql`SELECT COUNT(*) FROM ducks WHERE obtainable = False`;
+		let unfoundDucks = await sql`SELECT COUNT(*) FROM ducks WHERE first_user IS NULL AND obtainable = True`;
 		let totalUsers = await sql`SELECT COUNT(*) FROM users WHERE permissions = 0`;
 		let totalFinds = await sql`SELECT COUNT(*) FROM finds`;
 		stats.totalDucks = totalDucks[0].count;
+		stats.lostDucks = lostDucks[0].count;
+		stats.availableDucks = stats.totalDucks - stats.lostDucks;
 		stats.unfoundDucks = unfoundDucks[0].count;
 		stats.totalUsers = totalUsers[0].count;
 		stats.totalFinds = totalFinds[0].count;
