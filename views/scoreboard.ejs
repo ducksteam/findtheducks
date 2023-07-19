@@ -12,14 +12,14 @@
         <table>
             <tr>
                 <th class="scoreboard-username">Username</th>
-                <th class="scoreboard-stat">Finds</th>
                 <th class="scoreboard-stat">Firsts</th>
+                <th class="scoreboard-stat">Finds</th>
             </tr>
             <% scoreboard.forEach(user => { %>
                 <tr>
                     <td><%= user.username %></td>
-                    <td><%= user.finds %></td>
                     <td><%= user.first_finds %></td>
+                    <td><%= user.finds %></td>
                 </tr>
             <% }); %>
         </table>
