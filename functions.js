@@ -91,12 +91,10 @@ async function entry(req, res, duckCode){
 		return "Duck not found";
 	}
 	// Check duck has not already been found by user
-	let findCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id}`;
-	findCheck.forEach(find => {
-		if(find.user_id === req.session.user.id){
-			return "Duck already found";
-		}
-	});
+	let findCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id} and user_id = ${req.session.user.id}`;
+	if (findCheck.length !== 0) {
+		return "Duck already found";
+	}
 	// Check if duck not yet been found and change first finder on duck
 	if(findCheck.length == 0){ 
 		await sql`update ducks set first_user = ${req.session.user.id} where id = ${duckCheck[0].id}`;
