@@ -12,7 +12,7 @@
             } else if ( status !== "Success!") { %>
                 <div class="alert alert-danger"><%= status %></div>
             <% } else { %>
-                <div class="alert alert-success">Check your email (and spam) for a verification link.</div>
+                <div class="alert alert-success">Check your email (and spam) for a verification link. This may take up to 5 minutes.</div>
             <% } %>
             <form action="/users/register" method="post">
                 <div class="formItem">
