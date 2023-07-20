@@ -120,7 +120,6 @@ async function entry(req, res, duckCode){
 }
 
 async function getScoreboard(){
-	await updateUserFinds();
 	let scoreboard = await sql`select username, finds, first_finds from users where permissions = 0 order by first_finds desc, finds desc, id asc`;
 	return scoreboard;
 }
