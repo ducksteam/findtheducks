@@ -6,7 +6,7 @@
 <body>
     <%- include("../templates/header", {authorised, permissions}) %>
     <div class="content">
-        <h1>Resend verification email</h1>
+        <h1>Reset password</h1>
         <% if (status == "undefined") {
         } else if ( status !== "Success!") { %>
             <div class="alert alert-danger"><%= status %></div>
@@ -18,8 +18,8 @@
                 <label>new password</label> <br>
                 <input type="text" name="password" required>
                 <label>confirm new password</label>
-                <input type ="text" name = "confirm password" required>
-                <input type="hidden" name = "uuid">
+                <input type="text" name="confirmPassword" required>
+                <input type="hidden" name="uuid" value="<%= uuid %>">
             </div>
             <br>
             <button type="submit">reset password</button>
