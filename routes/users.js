@@ -73,6 +73,20 @@ router.post("/resend", async (req, res) => { // Handle resend verification form 
 	res.redirect("/users/resend?status=" + encodeURIComponent(status));
 });
 
+router.get("/reset", (req, res) => { // Serve reset password page
+	const status = decodeURIComponent(req.query.status) || "";
+	res.render("users/reset", { status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+});
+
+router.post("/reset", async (req, res) => { // Handle reset password form submission
+	const { email } = req.body;
+	if(!userCheck[0]) return res.redirect("/users/reset?status=" + encodeURIComponent("Email not found"));
+	if(userCheck[0].verified) return res.redirect("/users/reset?status=" + encodeURIComponent("Email already verified"));
+	const username = userCheck[0].username;
+	const status = await sendPasswordResetEmail(email, username);
+	res.redirect("/users/reset?status=" + encodeURIComponent(status));
+});
+
 router.post("/profile", (req, res) => { // Handle username update form submission
 	if(req.session.authorised){
 		sql`UPDATE users SET username = ${req.body.username} WHERE id = ${req.session.user.id}`.then(() => {

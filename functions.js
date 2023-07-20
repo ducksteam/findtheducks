@@ -164,6 +164,22 @@ async function sendVerificationEmail(email, username) {
 	return "Success!";
 }
 
+async function sendPasswordResetEmail(email, username){
+	const mailgun = new Mailgun(FormData);
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
+	mg.messages.create("mg.findtheducks.live", {
+		from: "Find The Ducks <noreply@findtheducks.live>",
+		to: email,
+		subject: "Bet you're feeling silly",
+		template: "reset"
+	}).then(msg => console.log(msg))
+	.catch(err => {
+		console.log(err);
+		return err;
+	});
+	return "Success!";
+}
+
 async function updateUserFinds() {
 	// reset user finds
 	await sql`UPDATE users SET finds = 0, first_finds = 0`;

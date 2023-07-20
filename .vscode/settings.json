@@ -1,4 +1,9 @@
 {
     "appService.showBuildDuringDeployPrompt": false,
-    "appService.defaultWebAppToDeploy": "None"
+    "appService.defaultWebAppToDeploy": "None",
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#083509",
+        "titleBar.activeBackground": "#0B4B0D",
+        "titleBar.activeForeground": "#F4FDF5"
+    }
 }
