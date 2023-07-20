@@ -73,10 +73,18 @@ router.post("/resend", async (req, res) => { // Handle resend verification form 
 	res.redirect("/users/resend?status=" + encodeURIComponent(status));
 });
 
-router.get("/resetlink", (req, res) => {
+router.get("/resetlink", async (req, res) => {
 	const status = decodeURIComponent(req.query.status) || "";
 	const uuid = req.query.uuid;
-	res.render("users/resetlink", { uuid, status, pageTitle: "resend verification", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	if(!uuid) {
+		return res.redirect("/users/reset?status=" + encodeURIComponent("Invalid reset link"));
+	} else {
+		const uuidCheck = await sql`SELECT * FROM users WHERE reset_id = ${uuid}`; // Get user with matching reset ID
+		if(!uuidCheck[0]){ // Check user exists
+			return res.redirect("/users/reset?status=" + encodeURIComponent("No reset link found"));
+		}
+	}
+	res.render("users/resetlink", { uuid, status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 });
 
 router.post("/resetlink", async (req, res) => { // Handle new password form submission
