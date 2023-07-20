@@ -16,11 +16,13 @@
         <form action="/users/resetlink" method="post">
             <div class="user_box">
                 <label>new password</label> <br>
-                <input type="text" name="password" required>
-                <label>confirm new password</label>
-                <input type="text" name="confirmPassword" required>
-                <input type="hidden" name="uuid" value="<%= uuid %>">
+                <input type="password" name="password" required>
             </div>
+            <div class="user_box">
+                <label>confirm new password</label> <br>
+                <input type="password" name="confirmPassword" required>
+            </div>
+            <input type="hidden" name="uuid" value="<%= uuid %>">
             <br>
             <button type="submit">reset password</button>
     </div>

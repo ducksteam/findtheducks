@@ -9,7 +9,7 @@
         <div class="login_box">
             <h2>rejoin the flock</h2>
             <% if (status == "undefined") {
-            } else if ( status == "Success!" || status == "Logged out" || status == "Email verified") { %>
+            } else if ( status == "Success!" || status == "Logged out" || status == "Email verified" || status == "Password reset") { %>
                 <div class="alert alert-success"><%= status %></div>
             <% } else { %>
                 <div class="alert alert-danger"><%= status %></div>
