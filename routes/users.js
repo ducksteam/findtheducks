@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { register, login, getProfile, sendVerificationEmail } from "../functions.js";
+import { register, login, getProfile, sendVerificationEmail, sendPasswordResetEmail, updatePassword } from "../functions.js";
 import sql from "../db.js";
 import duckFact from "../duckFacts.js";
 import bcrypt from "bcrypt";
@@ -71,6 +71,61 @@ router.post("/resend", async (req, res) => { // Handle resend verification form 
 	const username = userCheck[0].username;
 	const status = await sendVerificationEmail(email, username);
 	res.redirect("/users/resend?status=" + encodeURIComponent(status));
+});
+
+router.get("/resetlink", async (req, res) => {
+	const status = decodeURIComponent(req.query.status) || "";
+	const uuid = req.query.uuid;
+	if(!uuid) {
+		return res.redirect("/users/reset?status=" + encodeURIComponent("Invalid reset link"));
+	} else {
+		const uuidCheck = await sql`SELECT * FROM users WHERE reset_id = ${uuid}`; // Get user with matching reset ID
+		if(!uuidCheck[0]){ // Check user exists
+			return res.redirect("/users/reset?status=" + encodeURIComponent("No reset link found"));
+		}
+	}
+	res.render("users/resetlink", { uuid, status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+});
+
+router.post("/resetlink", async (req, res) => { // Handle new password form submission
+	if(req.body.password !== req.body.confirmPassword){ // Check passwords match
+		return res.redirect("/users/resetlink?status=" + encodeURIComponent("Passwords do not match"));
+	}
+	let user = await sql`SELECT * FROM users WHERE reset_id = ${req.body.uuid}`; // Get user with matching reset ID
+	if(!user[0]){ // Check user exists
+		return res.redirect("/users/resetlink?status=" + encodeURIComponent("Email not found"));
+	} else { 
+		const issued = new Date(user[0].reset_date);
+		const expiry = new Date();
+		expiry.setTime(issued.getTime() + (30 * 60 * 1000)); // Set expiry to 30 minutes after reset link was issued
+		const now = new Date();
+		now.setTime(now.getTime() - 12 * 60 * 60 * 1000);
+		if(expiry.getTime() < now.getTime()){ // Check if reset link has expired
+			return res.redirect("/users/resetlink?status=" + encodeURIComponent("Reset link expired"));
+		} else { // Update password 
+			const status = await updatePassword(req.body.uuid, req.body.password);
+			if(status === "Success!"){
+				res.redirect("/users/login?status=" + encodeURIComponent("Password reset"));
+			} else {
+				res.redirect("/users/resetlink?status=" + encodeURIComponent(status));
+			}
+		}
+	}
+	
+});
+
+router.get("/reset", (req, res) => { // Serve reset password page
+	const status = decodeURIComponent(req.query.status) || "";
+	res.render("users/reset", { status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+});
+
+router.post("/reset", async (req, res) => { // Handle reset password form submission
+	const { email } = req.body;
+	const userCheck = await sql`SELECT * FROM users WHERE email = ${email}`;
+	if(!userCheck[0]) return res.redirect("/users/reset?status=" + encodeURIComponent("Email not found"));
+	const username = userCheck[0].username;
+	const status = await sendPasswordResetEmail(email, username);
+	res.redirect("/users/reset?status=" + encodeURIComponent(status));
 });
 
 router.post("/profile", (req, res) => { // Handle username update form submission

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include("../templates/head") %>
+</head>
+<body>
+    <%- include("../templates/header", {authorised, permissions}) %>
+    <div class="content">
+        <h1>Reset password</h1>
+        <% if (status == "undefined") {
+        } else if ( status !== "Success!") { %>
+            <div class="alert alert-danger"><%= status %></div>
+        <% } else { %>
+            <div class="alert alert-success"><%= status %></div>
+        <% } %>
+        <form action="/users/resetlink" method="post">
+            <div class="user_box">
+                <label>new password</label> <br>
+                <input type="password" name="password" required>
+            </div>
+            <div class="user_box">
+                <label>confirm new password</label> <br>
+                <input type="password" name="confirmPassword" required>
+            </div>
+            <input type="hidden" name="uuid" value="<%= uuid %>">
+            <br>
+            <button type="submit">reset password</button>
+    </div>
+    <%- include("../templates/footer", {duckFact}) %>
+</body>
+</html>

@@ -9,7 +9,7 @@
         <div class="login_box">
             <h2>rejoin the flock</h2>
             <% if (status == "undefined") {
-            } else if ( status == "Success!" || status == "Logged out" || status == "Email verified") { %>
+            } else if ( status == "Success!" || status == "Logged out" || status == "Email verified" || status == "Password reset") { %>
                 <div class="alert alert-success"><%= status %></div>
             <% } else { %>
                 <div class="alert alert-danger"><%= status %></div>
@@ -27,6 +27,7 @@
                 <br>
                 <p>not a ducker yet? <a href="/users/register">sign up here</a></p>
                 <p>can't find your verification email? <a href="/users/resend">get another here</a></p>
+                <p>forgot your password? <a href="/users/reset">reset it here</a></p>
             </form>
         </div>
     </div>
