@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { register, login, getProfile, sendVerificationEmail } from "../functions.js";
+import { register, login, getProfile, sendVerificationEmail, sendPasswordResetEmail } from "../functions.js";
 import sql from "../db.js";
 import duckFact from "../duckFacts.js";
 import bcrypt from "bcrypt";

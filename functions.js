@@ -171,7 +171,8 @@ async function sendPasswordResetEmail(email, username){
 		from: "Find The Ducks <noreply@findtheducks.live>",
 		to: email,
 		subject: "Bet you're feeling silly",
-		template: "reset"
+		template: "reset",
+		"h:X-Mailgun-Variables": JSON.stringify({uuid: uuid, duckFact: duckFact()})
 	}).then(msg => console.log(msg))
 	.catch(err => {
 		console.log(err);
@@ -194,4 +195,4 @@ async function updateUserFinds() {
 	}
 }
 
-export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail };
+export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail, sendPasswordResetEmail };
