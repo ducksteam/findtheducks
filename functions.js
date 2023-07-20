@@ -108,7 +108,8 @@ async function entry(req, res, duckCode){
 		return "Duck already found";
 	}
 	// Check if duck not yet been found and change first finder on duck
-	if(findCheck.length == 0){ 
+	let firstCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id}`;
+	if(firstCheck.length == 0){ 
 		await sql`update ducks set first_user = ${req.session.user.id} where id = ${duckCheck[0].id}`;
 	}
 	// Insert find into database
@@ -119,6 +120,7 @@ async function entry(req, res, duckCode){
 }
 
 async function getScoreboard(){
+	await updateUserFinds();
 	let scoreboard = await sql`select username, finds, first_finds from users where permissions = 0 order by first_finds desc, finds desc, id asc`;
 	return scoreboard;
 }
@@ -215,7 +217,7 @@ async function sendPasswordIsResetEmail(email){
 async function updateUserFinds() {
 	// reset user finds
 	await sql`UPDATE users SET finds = 0, first_finds = 0`;
-	const finds = await sql`SELECT * FROM finds ORDER BY find_date ASC`; // Get all finds
+	const finds = await sql`SELECT * FROM finds ORDER BY find_date DESC`; // Get all finds
 	for (const find of finds) { // For each find
 		const duck = await sql`SELECT * FROM ducks WHERE id = ${find.duck_id}`; // Get duck found
 		if (duck[0].first_user === find.user_id) { // If user was first to find duck, add one to first_finds and finds
