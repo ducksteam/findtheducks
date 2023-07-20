@@ -73,6 +73,15 @@ router.post("/resend", async (req, res) => { // Handle resend verification form 
 	res.redirect("/users/resend?status=" + encodeURIComponent(status));
 });
 
+router.get("/resetlink", (req,res)=>{
+	const status = decodeURIComponent(req.query.status) || "";
+	res.render("users/resend", { status, pageTitle: "resend verification", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+});
+
+router.post("/resetlink", async (req,res) =>{
+	
+})
+
 router.get("/reset", (req, res) => { // Serve reset password page
 	const status = decodeURIComponent(req.query.status) || "";
 	res.render("users/reset", { status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });

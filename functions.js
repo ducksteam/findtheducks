@@ -54,6 +54,16 @@ async function register(email, username, password, confirmPassword) {
 	}
 }
 
+async function updatePassword(uuid,password){
+	try{
+		const passwordHash = await bcrypt.hash(password, 10);
+		await sql`UPDATE users SET password_hash = ${passwordHash} WHERE id =${uuid}`;
+	} catch(err){
+		console.log(err);
+		return "Error resetting password";
+	}
+}
+
 async function login(req, res, email, password) {
 	// Check email is valid
 	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
@@ -181,6 +191,23 @@ async function sendPasswordResetEmail(email, username){
 	return "Success!";
 }
 
+async function sendPasswordIsResetEmail(email, username){
+	const mailgun = new Mailgun(FormData);
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
+	mg.messages.create("mg.findtheducks.live", {
+		from: "Find The Ducks <noreply@findtheducks.live>",
+		to: email,
+		subject: "All done",
+		template: "reset-done",
+		"h:X-Mailgun-Variables": JSON.stringify({uuid: uuid, duckFact: duckFact()})
+	}).then(msg => console.log(msg))
+	.catch(err => {
+		console.log(err);
+		return err;
+	});
+	return "Success!";
+}
+
 async function updateUserFinds() {
 	// reset user finds
 	await sql`UPDATE users SET finds = 0, first_finds = 0`;
@@ -195,4 +222,4 @@ async function updateUserFinds() {
 	}
 }
 
-export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail, sendPasswordResetEmail };
+export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail, sendPasswordResetEmail, sendPasswordIsResetEmail, updatePassword };
