@@ -35,6 +35,10 @@ async function register(email, username, password, confirmPassword) {
 	let usernameCheck = await sql`select * from users where username = ${username}`;
 	if (usernameCheck.length !== 0) {
 		return "Username already in use";
+	} 
+
+	if(username.length > 30){
+		return "Username cannot be longer than 30 characters";
 	}
 
 	// Hash password and insert into database

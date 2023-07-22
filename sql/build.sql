@@ -4,8 +4,8 @@ DROP TABLE IF EXISTS finds;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(99),
-    username VARCHAR(20),
+    email TEXT,
+    username VARCHAR(30),
     password_hash VARCHAR(60),
     permissions SMALLINT,
     finds INT,
