@@ -47,7 +47,7 @@ router.get("/scoreboard", async (req, res) => { // Serve scoreboard page
 });
 
 router.get("/newduck", (req, res) => { // Serve new duck page
-	if(req.session.permissions > 0){
+	if(req.session.permissions > 1){
 		const status = decodeURIComponent(req.query.status) || "";
 		res.render("newduck", { pageTitle: "new duck", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact() });
 	} else {
@@ -56,7 +56,7 @@ router.get("/newduck", (req, res) => { // Serve new duck page
 });
 
 router.post("/newduck", async (req, res) => { // Handle new duck form submission
-	if(req.session.permissions > 0){
+	if(req.session.permissions > 1){
 		const status = await insertDuck(req, req.body.code, req.body.location);
 		res.redirect("newduck?status=" + encodeURIComponent(status));
 	} else {

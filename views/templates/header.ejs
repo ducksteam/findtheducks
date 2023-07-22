@@ -5,7 +5,7 @@
         <label for="checkbox_toggle" class="hamburger">&#9776;</label>
         <div class="menu">
             <li class="navbar-home" ><a class="navbar-link" href="/scoreboard">Scoreboard</a></li>
-            <% if (permissions == 1) { %>
+            <% if (permissions > 0) { %>
             <li class="navbar-home" ><a class="navbar-link" href="/newduck">Duck Entry</a></li>
             <% } else { %>
             <li class="navbar-home" ><a class="navbar-link" href="/entry">Duck Entry</a></li>
