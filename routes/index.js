@@ -65,8 +65,13 @@ router.post("/newduck", async (req, res) => { // Handle new duck form submission
 });
 
 router.post("/entry", async (req, res) => { // Handle entry form submission
-	const status = await entry(req, res, req.body.duckCode);
-	res.redirect("/entry?status=" + encodeURIComponent(status));
+	if(req.session.permissions == 0){
+		const status = await entry(req, res, req.body.duckCode);
+		res.redirect("/entry?status=" + encodeURIComponent(status));
+	} else {
+		res.status(403).render("errors/generic", { errorCode: 403, message: "you tricky trickster, you can't play the game", pageTitle: "403", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	}
+		
 });
 
 router.use(express.static("public")); // Serve static files
