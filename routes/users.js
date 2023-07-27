@@ -131,6 +131,7 @@ router.post("/reset", async (req, res) => { // Handle reset password form submis
 });
 
 router.post("/profile", async (req, res) => { // Handle username update form submission
+	const username = req.body.username;
 	let filter = new Filter();
 	if(req.session.authorised){
 		// Check username is not profane
