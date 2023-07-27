@@ -1,0 +1,36 @@
+export default {
+	// Successes
+	"100": "Success!",
+	"101": "Logged out",
+	"102": "Email verified",
+	"103": "Password reset",
+	"104": "Username updated",
+	// User errors
+	"200": "Generic user error",
+	"201": "Passwords do not match",
+	"202": "Invalid email",
+	"203": "Email already in use",
+	"204": "Username contains profanity",
+	"205": "Username already in use",
+	"206": "Username too short",
+	"207": "Username cannot be longer than 30 characters",
+	"208": "Email not registered",
+	"209": "Incorrect password",
+	"210": "Email not verified",
+	"211": "Duck not found",
+	"212": "Duck already found",
+	"213": "Code already exists",
+	"214": "Please log in to view your profile",
+	"215": "Verification link expired",
+	"216": "Email already verified",
+	"217": "Invalid verification link",
+	"218": "Invalid password reset link",
+	"219": "No password reset link found",
+	"220": "Password reset link expired",
+	"221": "New password must be different from old password",
+	// Server errors
+	"300": "Internal server error",
+	"301": "Error resetting password",
+	"302": "Error updating database",
+	"303": "Error sending verification email"
+};
