@@ -81,6 +81,16 @@ label {
     padding-top: 20px;
     text-align: center;
     width: 100%;
+    display: inline;
+}
+
+.githubIcon {
+    font-size: 44px !important;
+    color:#000;
+    padding-top: 20px;
+    text-align: center;
+    width: 100%;
+    display: inline;
 }
 
 .hamburger {
