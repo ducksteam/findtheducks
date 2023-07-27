@@ -4,6 +4,8 @@ import { register, login, getProfile, sendVerificationEmail, sendPasswordResetEm
 import sql from "../db.js";
 import duckFact from "../duckFacts.js";
 import bcrypt from "bcrypt";
+import Filter from "bad-words";
+
 
 router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
@@ -128,8 +130,24 @@ router.post("/reset", async (req, res) => { // Handle reset password form submis
 	res.redirect("/users/reset?status=" + encodeURIComponent(status));
 });
 
-router.post("/profile", (req, res) => { // Handle username update form submission
+router.post("/profile", async (req, res) => { // Handle username update form submission
+	let filter = new Filter();
 	if(req.session.authorised){
+		// Check username is not profane
+		if(filter.isProfane(username)){
+			return res.redirect("profile?status=" + encodeURIComponent("Username contains profanity"));
+		}
+	
+		// Check username is not taken
+		let usernameCheck = await sql`select * from users where username = ${username}`;
+		if (usernameCheck.length !== 0) {
+			return res.redirect("profile?status=" + encodeURIComponent("Username already in use"));
+		} 
+	
+		if(username.length > 30){
+			return res.redirect("profile?status=" + encodeURIComponent("Username cannot be longer than 30 characters"));
+		}
+
 		sql`UPDATE users SET username = ${req.body.username} WHERE id = ${req.session.user.id}`.then(() => {
 			req.session.user.username = req.body.username;
 			res.redirect("profile?status=" + encodeURIComponent("Username updated"));
