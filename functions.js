@@ -11,34 +11,34 @@ async function register(email, username, password, confirmPassword) {
 
 	// Check passwords match
 	if (password !== confirmPassword) {
-		return "Passwords do not match";
+		return 201; // 201 = Passwords do not match
 	}
 
 	// Check email is valid
 	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 	if (!email.match(mailFormat)) {
-		return "Invalid email";
+		return 202; // 202 = Invalid email
 	}
 	
 	// Check username is valid
 	let emailCheck = await sql`select * from users where email = ${email}`;
 	if (emailCheck.length !== 0) {
-		return "Email already in use";
+		return 203; // 203 = Email already in use
 	}
 
 	// Check username is not profane
 	if(filter.isProfane(username)){
-		return "Username contains profanity";
+		return 204; // 204 = Profane username
 	}
 
 	// Check username is not taken
 	let usernameCheck = await sql`select * from users where username = ${username}`;
 	if (usernameCheck.length !== 0) {
-		return "Username already in use";
+		return 205; // 205 = Username already in use
 	} 
 
 	if(username.length > 30){
-		return "Username cannot be longer than 30 characters";
+		return 206; // 206 = Username too long
 	}
 
 	// Hash password and insert into database
@@ -47,15 +47,9 @@ async function register(email, username, password, confirmPassword) {
 		await sql`insert into users (email, username, password_hash, permissions, finds, first_finds) values (${email}, ${username}, ${passwordHash}, 0, 0, 0)`;
 	} catch (err) {
 		console.log(err);
-		return "Error inserting into database";
+		return 302; // 302 = Error updating database
 	}
-	try {
-		await sendVerificationEmail(email, username);
-		return "Success!";
-	} catch (err) {
-		console.log(err);
-		return "Error sending verification email";
-	}
+	return await sendVerificationEmail(email, username);
 }
 
 async function updatePassword(uuid, password){
@@ -63,10 +57,10 @@ async function updatePassword(uuid, password){
 		const passwordHash = await bcrypt.hash(password, 10);
 		await sql`UPDATE users SET password_hash = ${passwordHash} WHERE reset_id =${uuid}`;
 		await sql`UPDATE users SET reset_id = NULL, reset_date = NULL WHERE reset_id =${uuid}`;
-		return "Success!";
+		return 100; // 100 = Success
 	} catch(err){
 		console.log(err);
-		return "Error resetting password";
+		return 301; // 301 = Error updating password
 	}
 }
 
@@ -74,24 +68,24 @@ async function login(req, res, email, password) {
 	// Check email is valid
 	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 	if (!email.match(mailFormat)) {
-		return "Invalid email";
+		return 202; // 202 = Invalid email
 	}
 
 	// Check email has associated account
 	let user = await sql`select * from users where email = ${email}`;
 	if (user.length === 0) {
-		return "Email not registered";
+		return 208; // 208 = Email not registered
 	}
 
 	// Check password is correct
 	const passwordCheck = await bcrypt.compare(password, user[0].password_hash);
 	if (!passwordCheck) {
-		return "Incorrect password";
+		return 209; // 209 = Incorrect password
 	}
 
 	// Check email is verified
 	if (!user[0].verified) {
-		return "Email not verified";
+		return 210; // 210 = Email not verified
 	}
 
 	// Set session variables
@@ -104,12 +98,12 @@ async function entry(req, res, duckCode){
 	// Check duck code is valid
 	let duckCheck = await sql`select * from ducks where duck_key = ${duckCode}`;
 	if (duckCheck.length === 0) {
-		return "Duck not found";
+		return 211; // 211 = duck not found
 	}
 	// Check duck has not already been found by user
 	let findCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id} and user_id = ${req.session.user.id}`;
 	if (findCheck.length !== 0) {
-		return "Duck already found";
+		return 212; // 212 = duck already found
 	}
 	// Check if duck not yet been found and change first finder on duck
 	let firstCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id}`;
@@ -120,7 +114,7 @@ async function entry(req, res, duckCode){
 	await sql`insert into finds (user_id, duck_id, find_date) VALUES (${req.session.user.id}, ${duckCheck[0].id}, NOW())`;
 	// Update scoreboard
 	await updateUserFinds();
-	return "Success!";
+	return 100; // 100 = success
 }
 
 async function getScoreboard(){
@@ -152,13 +146,13 @@ async function getProfile(req){
 async function insertDuck(req, code, loc){
 	const duckQuery = await sql`SELECT * FROM ducks WHERE duck_key = ${code}`;
 	if(duckQuery.length !== 0){
-		return "Code already exists";
+		return 213; // 213 = code already exists
 	}
 	try {
 		await sql`INSERT INTO ducks (duck_key, location_description, date_placed) VALUES (${code}, ${loc}, NOW())`;
-		return "Success!";
+		return 100; // 100 = success
 	} catch (err) {
-		return "Error inserting into database";
+		return 302; // 302 = error updating database
 	}
 }
 
@@ -176,9 +170,9 @@ async function sendVerificationEmail(email, username) {
 	}).then(msg => console.log(msg))
 		.catch(err => {
 			console.log(err);
-			return err;
+			return 303; // 303 = error sending email
 		});
-	return "Success!";
+	return 100; // 100 = success
 }
 
 async function sendPasswordResetEmail(email){
@@ -195,9 +189,9 @@ async function sendPasswordResetEmail(email){
 	}).then(msg => console.log(msg))
 		.catch(err => {
 			console.log(err);
-			return err;
+			return 303; // 303 = error sending email
 		});
-	return "Success!";
+	return 100; // 100 = success
 }
 
 async function sendPasswordIsResetEmail(email){
@@ -212,9 +206,9 @@ async function sendPasswordIsResetEmail(email){
 	}).then(msg => console.log(msg))
 		.catch(err => {
 			console.log(err);
-			return err;
+			return 303; // 303 = error sending email
 		});
-	return "Success!";
+	return 100; // 100 = success
 }
 
 async function updateUserFinds() {

@@ -37,7 +37,7 @@ router.get("/entry", (req, res) => { // Serve entry page
 		const status = decodeURIComponent(req.query.status) || "";
 		res.render("entry", { pageTitle: "duck entry", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact() });
 	} else {
-		res.redirect("users/login?status=" + encodeURIComponent("Please log in to enter a duck"));
+		res.redirect("users/login?status=215"); // 215 = Please log in to enter a duck
 	}
 });
 

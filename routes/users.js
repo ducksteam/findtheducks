@@ -11,7 +11,7 @@ router.get("/profile", async (req, res) => { // Serve profile page
 		const status = decodeURIComponent(req.query.status) || "";
 		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact() });
 	} else {
-		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
+		res.redirect("login?status=214"); // 214 = Please log in to view your profile
 	}
 });
 
@@ -31,7 +31,7 @@ router.get("/login", (req, res) => { // Serve login page
 
 router.get("/logout", (req, res) => { // Handle logout
 	req.session.destroy();
-	res.redirect("login?status=" + encodeURIComponent("Logged out"));
+	res.redirect("login?status=101"); // 101 = Logged out
 });
 
 router.get("/verify", async (req, res) => { // Handle email verification
@@ -46,15 +46,15 @@ router.get("/verify", async (req, res) => { // Handle email verification
 			now.setTime(now.getTime() - 12 * 60 * 60 * 1000);
 			if(expiry.getTime() > now.getTime()){ // Check if verification link has not expired
 				await sql`UPDATE users SET verification_id = NULL, verification_date = NULL, verified = TRUE WHERE id = ${user[0].id}`; // Update user to verified
-				res.redirect("login?status=" + encodeURIComponent("Email verified"));
+				res.redirect("login?status=102"); // 102 = Email verified
 			} else {
-				res.redirect("resend?status=" + encodeURIComponent("Verification link expired"));
+				res.redirect("resend?status=216"); // 216 = Verification link expired
 			}
 		} else {
-			res.redirect("login?status=" + encodeURIComponent("Email already verified"));
+			res.redirect("login?status=217"); // 217 = Email already verified
 		}
 	} else {
-		res.redirect("resend?status=" + encodeURIComponent("Invalid verification link"));
+		res.redirect("resend?status=218"); // 218 = Invalid verification link
 	}
 });
 
@@ -66,8 +66,8 @@ router.get("/resend", (req, res) => { // Serve resend verification page
 router.post("/resend", async (req, res) => { // Handle resend verification form submission
 	const { email } = req.body;
 	const userCheck = await sql`SELECT * FROM users WHERE email = ${email}`;
-	if(!userCheck[0]) return res.redirect("/users/resend?status=" + encodeURIComponent("Email not found"));
-	if(userCheck[0].verified) return res.redirect("/users/resend?status=" + encodeURIComponent("Email already verified"));
+	if(!userCheck[0]) return res.redirect("/users/resend?status=208"); // 208 = Email not registered
+	if(userCheck[0].verified) return res.redirect("/users/resend?status=217"); // 217 = Email already verified
 	const username = userCheck[0].username;
 	const status = await sendVerificationEmail(email, username);
 	res.redirect("/users/resend?status=" + encodeURIComponent(status));
@@ -77,11 +77,11 @@ router.get("/resetlink", async (req, res) => {
 	const status = decodeURIComponent(req.query.status) || "";
 	const uuid = req.query.uuid;
 	if(!uuid) {
-		return res.redirect("/users/reset?status=" + encodeURIComponent("Invalid reset link"));
+		return res.redirect("/users/reset?status=219"); // 219 = Invalid password reset link
 	} else {
 		const uuidCheck = await sql`SELECT * FROM users WHERE reset_id = ${uuid}`; // Get user with matching reset ID
 		if(!uuidCheck[0]){ // Check user exists
-			return res.redirect("/users/reset?status=" + encodeURIComponent("No reset link found"));
+			return res.redirect("/users/reset?status=220"); // 220 = Password reset link not found
 		}
 	}
 	res.render("users/resetlink", { uuid, status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
@@ -89,11 +89,11 @@ router.get("/resetlink", async (req, res) => {
 
 router.post("/resetlink", async (req, res) => { // Handle new password form submission
 	if(req.body.password !== req.body.confirmPassword){ // Check passwords match
-		return res.redirect("/users/resetlink?status=" + encodeURIComponent("Passwords do not match"));
+		return res.redirect("/users/resetlink?status=210"); // 210 = Passwords do not match
 	}
 	let user = await sql`SELECT * FROM users WHERE reset_id = ${req.body.uuid}`; // Get user with matching reset ID
 	if(!user[0]){ // Check user exists
-		return res.redirect("/users/resetlink?status=" + encodeURIComponent("Email not found"));
+		return res.redirect("/users/resetlink?status=208"); // 208 = Email not registered
 	} else { 
 		const issued = new Date(user[0].reset_date);
 		const expiry = new Date();
@@ -101,13 +101,13 @@ router.post("/resetlink", async (req, res) => { // Handle new password form subm
 		const now = new Date();
 		now.setTime(now.getTime() - 12 * 60 * 60 * 1000);
 		if(expiry.getTime() < now.getTime()){ // Check if reset link has expired
-			return res.redirect("/users/resetlink?status=" + encodeURIComponent("Reset link expired"));
+			return res.redirect("/users/resetlink?status=221"); // 221 = Password reset link expired
 		} else { // Update password 
 			const status = await updatePassword(req.body.uuid, req.body.password);
 			if(status === "Success!"){
-				res.redirect("/users/login?status=" + encodeURIComponent("Password reset"));
+				res.redirect("/users/login?status=103"); // 103 = Password reset
 			} else {
-				res.redirect("/users/resetlink?status=" + encodeURIComponent(status));
+				res.redirect("/users/resetlink?status=301"); // 301 = Error resetting password
 			}
 		}
 	}
@@ -122,7 +122,7 @@ router.get("/reset", (req, res) => { // Serve reset password page
 router.post("/reset", async (req, res) => { // Handle reset password form submission
 	const { email } = req.body;
 	const userCheck = await sql`SELECT * FROM users WHERE email = ${email}`;
-	if(!userCheck[0]) return res.redirect("/users/reset?status=" + encodeURIComponent("Email not found"));
+	if(!userCheck[0]) return res.redirect("/users/reset?status=208"); // 208 = Email not found
 	const username = userCheck[0].username;
 	const status = await sendPasswordResetEmail(email, username);
 	res.redirect("/users/reset?status=" + encodeURIComponent(status));
@@ -132,7 +132,7 @@ router.post("/profile", (req, res) => { // Handle username update form submissio
 	if(req.session.authorised){
 		sql`UPDATE users SET username = ${req.body.username} WHERE id = ${req.session.user.id}`.then(() => {
 			req.session.user.username = req.body.username;
-			res.redirect("profile?status=" + encodeURIComponent("Username updated"));
+			res.redirect("profile?status=104"); // 104 = Username updated
 		});
 	}
 });
@@ -156,15 +156,15 @@ router.post("/login", async (req, res) => { // Handle login form submission
 router.post("/password", async (req, res) => { // Handle password update form submission
 	if(req.session.authorised){
 		const { oldPassword, password, confirmPassword } = req.body;
-		if (password !== confirmPassword) return res.redirect("profile?status=" + encodeURIComponent("Passwords do not match"));
-		if (password == oldPassword) return res.redirect("profile?status=" + encodeURIComponent("New password cannot be the same as the old password"));
+		if (password !== confirmPassword) return res.redirect("profile?status=201");
+		if (password == oldPassword) return res.redirect("profile?status=222");
 		const hash = await bcrypt.hash(password, 10);
 		try {
 			await sql`UPDATE users SET password_hash = ${hash} WHERE id = ${req.session.user.id}`;
 		} catch (err) {
-			return res.redirect("profile?status=" + encodeURIComponent("Error updating password in database"));
+			return res.redirect("profile?status=301"); // 301 = Error updating password
 		}
-		res.redirect("profile?status=" + encodeURIComponent("Success!"));
+		res.redirect("profile?status=103"); // 103 = Password updated
 	}
 });
 
