@@ -1,0 +1,20 @@
+<% 
+getErrorMsg = function(code){
+    import errorCodes from "../config/errorCodes.js";    
+    return errorCodes[code];
+}
+getErrorStatus = function(code, category){
+    code = parseInt(code);
+    if(code == undefined) return false;
+    if(typeof category == 'object'){
+        for(let i = 0; i < category.length; i++){
+            if(Math.floor(code / 100) == category[i]) return true;
+        }
+        return false;
+    } else if (typeof category == 'number'){
+        return Math.floor(code / 100) == category;
+    } else {
+        throw new TypeError("Error category must be an array or number");
+    }
+}
+%>
