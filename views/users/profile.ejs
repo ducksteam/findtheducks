@@ -14,12 +14,7 @@
             <input type="submit" value="Update">
         </form>
         <h3>Update password</h3>
-        <% if (status == "undefined") {
-        } else if ( status !== "Success!") { %>
-            <div class="alert alert-danger"><%= status %></div>
-        <% } else { %>
-            <div class="alert alert-success"><%= status %></div>
-        <% } %>
+        <%- include("../templates/errormsg", {status}) %>
         <form action="/users/password" method="POST">
             <div class="formItem">
                 <label>Enter current password</label> <br>

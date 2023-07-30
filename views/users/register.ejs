@@ -8,12 +8,7 @@
     <div class="content">
         <div class="login_box">
             <h2>join the duckers</h2>
-            <% if (status == "undefined") {
-            } else if ( status !== "Success!") { %>
-                <div class="alert alert-danger"><%= status %></div>
-            <% } else { %>
-                <div class="alert alert-success">Check your email (and spam) for a verification link. This may take up to 5 minutes.</div>
-            <% } %>
+            <%- include("../templates/errormsg", {status}) %>
             <form action="/users/register" method="post">
                 <div class="formItem">
                     <label>email <i>- only players using a whs email will be eligible for the prize</i></label> <br>

@@ -7,11 +7,7 @@
     <div class="content">
         <h1>Entry</h1>
         <p>Enter the 8 character code found on the duck.</p>
-        <% if(status == "Success!") {%>
-        <div class="alert alert-success"><%= status %></div>
-        <% } else if(status !== "undefined") {%>
-        <div class="alert alert-danger"><%= status %></div>
-        <% } %>
+        <%- include("./templates/errormsg", {status}) %>
         <form action="/entry" method="POST">
             <div class="formItem">
                 <label>Duck Code</label> <br>

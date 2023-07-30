@@ -1,0 +1,6 @@
+<% include("../_functions") %>
+<% if(getErrorStatus(status, 1)) {%>
+<div class="alert alert-success"><%= getErrorMsg(status) %></div>
+<% } else if(getErrorStatus(status, [2, 3])) {%>
+<div class="alert alert-danger"><%= getErrorMsg(status) %></div>
+<% } %>
