@@ -7,6 +7,12 @@
     <%- include("../templates/header", {authorised, permissions}) %>
     <div class="content">
         <h1><%- user.username %></h1>
+        <% if (status == "undefined") {
+        } else if ( status == "Success!" || status == "Username updated") { %>
+            <div class="alert alert-success"><%= status %></div>
+        <% } else { %>
+            <div class="alert alert-danger"><%= status %></div>
+        <% } %>
         <h3>Update username</h3>
         <p>Your username is only shown on the scoreboard.</p>
         <form action="/users/profile" method="POST">
@@ -14,12 +20,6 @@
             <input type="submit" value="Update">
         </form>
         <h3>Update password</h3>
-        <% if (status == "undefined") {
-        } else if ( status !== "Success!") { %>
-            <div class="alert alert-danger"><%= status %></div>
-        <% } else { %>
-            <div class="alert alert-success"><%= status %></div>
-        <% } %>
         <form action="/users/password" method="POST">
             <div class="formItem">
                 <label>Enter current password</label> <br>
