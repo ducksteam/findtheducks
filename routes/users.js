@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { register, login, getProfile, sendVerificationEmail, sendPasswordResetEmail, updatePassword } from "../functions.js";
+import { register, login, getProfile, sendVerificationEmail, sendPasswordResetEmail, updatePassword, deleteUser } from "../functions.js";
 import sql from "../db.js";
 import duckFact from "../duckFacts.js";
 import bcrypt from "bcrypt";
@@ -114,6 +114,10 @@ router.post("/resetlink", async (req, res) => { // Handle new password form subm
 		}
 	}
 	
+});
+
+router.get("/delete", (req, res) => { // Serve delete account page
+	deleteUser(req, res);
 });
 
 router.get("/reset", (req, res) => { // Serve reset password page
