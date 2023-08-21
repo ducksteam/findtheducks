@@ -27,9 +27,7 @@ jobs:
           uses: docker/metadata-action@v3
           with:
             images: |
-              docker.io/${{ github.repository }}
               ghcr.io/${{ github.repository }}
-              quay.io/${{ github.repository }}
             tags: |
               type=ref,event=branch
               type=semver,pattern={{raw}}
@@ -48,7 +46,7 @@ jobs:
           with:
             push: true
             tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
+            labels: org.opencontainers.image.version=${{ steps.prep.outputs.version }}
 
     deploy:
         needs: publish
