@@ -22,13 +22,30 @@ jobs:
           env: 
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             WITH_V: true
+        - name: Generate Docker metadata
+          id: meta
+          uses: docker/metadata-action@v3
+          with:
+            images: |
+              docker.io/${{ github.repository }}
+              ghcr.io/${{ github.repository }}
+              quay.io/${{ github.repository }}
+            tags: |
+              type=ref,event=branch
+              type=semver,pattern={{raw}}
+            flavor: |
+              latest=true
         - name: Login
           run: |
             echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        - name: Build and Publish
-          run: |
-            docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        - name: Build and push
+          uses: docker/build-push-action@v2
+          env:
+            DOCKER_BUILDKIT: 1
+          with:
+            push: true
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
 
     deploy:
         needs: publish
