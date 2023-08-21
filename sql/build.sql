@@ -22,7 +22,8 @@ CREATE TABLE ducks (
     duck_key VARCHAR(10),
     location_description TEXT,
     date_placed TIMESTAMP,
-    first_user INT NULL DEFAULT NULL
+    first_user INT NULL DEFAULT NULL,
+    obtainable BOOLEAN DEFAULT TRUE,
 );
 
 CREATE TABLE finds (
