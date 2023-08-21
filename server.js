@@ -37,7 +37,8 @@ app.use(session({ // Set up session
 		maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
 	},
 	resave: false,
-	saveUninitialized: true
+	saveUninitialized: true,
+	secure: (process.env.TARGET === "production")
 }));
 
 app.use("/", indexRouter);
