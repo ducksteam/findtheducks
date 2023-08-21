@@ -15,12 +15,12 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+        - uses: actions/checkout@v3
         - name: Github Tag Bump
           uses: anothrNick/github-tag-action@1.67.0
           env: 
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             WITH_V: true
-        - uses: actions/checkout@v3
         - name: Login
           run: |
             echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
