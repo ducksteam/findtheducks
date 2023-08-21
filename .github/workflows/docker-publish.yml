@@ -11,6 +11,7 @@ env:
 
 jobs:
     publish:
+        permissions: write-all
         name: publish image
         runs-on: ubuntu-latest
 
