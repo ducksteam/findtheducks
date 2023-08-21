@@ -9,6 +9,7 @@ import indexRouter from "./routes/index.js";
 import userRouter from "./routes/users.js";
 
 import duckFact from "./duckFacts.js";
+import { csrf } from "lusca";
 
 const app = express(); // Create express app
 
@@ -25,6 +26,7 @@ app.use(logger("dev"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form submissions
 app.use(bodyParser.json());
+app.use(csrf);
 
 app.set("view engine", "ejs"); // Set view engine to ejs
 
