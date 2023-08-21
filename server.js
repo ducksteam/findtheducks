@@ -12,6 +12,14 @@ import duckFact from "./duckFacts.js";
 
 const app = express(); // Create express app
 
+var RateLimit = require("express-rate-limit");
+var limiter = RateLimit({
+	windowMs: 1*60*1000, // 1 minute
+	max: 20, // 20 requests per minute
+});
+
+app.use(limiter);
+
 app.use(favicon("public/favicon.png")); // Serve favicon
 app.use(logger("dev"));
 app.use(cookieParser());
