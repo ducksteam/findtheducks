@@ -27,7 +27,7 @@ jobs:
           uses: docker/metadata-action@v4
           with:
             images: |
-              skysourced/findtheducks
+              ghcr.io/skysourced/findtheducks
             tags: |
               type=ref,event=branch
               type=ref,event=pr
