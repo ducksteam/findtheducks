@@ -1,0 +1,17 @@
+name: Increase tag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+    increase-tag:
+      name: Increase tag
+      runs-on: ubuntu-latest
+      steps:
+        - name: Github Tag Bump
+          uses: anothrNick/github-tag-action@1.67.0
+          env:
+            GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
