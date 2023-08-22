@@ -10,18 +10,15 @@ env:
   IMAGE_NAME: skysourced/findtheducks:latest
 
 jobs:
-    publish:
-        permissions: write-all
-        name: publish image
-        runs-on: ubuntu-latest
-
-        steps:
-        - uses: actions/checkout@v3
-        - name: Github Tag Bump
-          uses: anothrNick/github-tag-action@1.67.0
-          env: 
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            WITH_V: true
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: Bump version and push tag
+          id: tag_version
+          uses: mathieudutour/github-tag-action@v6.1
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
         - name: Docker meta
           id: meta
           uses: docker/metadata-action@v4
@@ -45,11 +42,10 @@ jobs:
           with:
             context: .
             push: ${{ github.event_name != 'pull_request' }}
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
+            tags: ${{ steps.tag_version.outputs.new_tag }}, ${{ steps.meta.outputs.tags }}, ${{ env.IMAGE_NAME }}
 
     deploy:
-        needs: publish
+        needs: build
         name: deploy image
         runs-on: ubuntu-latest
 
