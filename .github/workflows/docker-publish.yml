@@ -1,4 +1,4 @@
-name: publish
+  name: publish
 
 on:
   push:
@@ -41,12 +41,21 @@ jobs:
             username: ${{ github.actor }}
             password: ${{ secrets.PAT }}
         - name: Build and push
+          id: gen_tags
+          run: |
+            if [[ $GITHUB_REF == 'refs/tags/'* ]]; then
+              TAGS='["user/image:latest","user/image:'${GITHUB_REF/refs\/tags\//}'"]'
+            else
+              TAGS='["user/image:latest"]'
+            fi
+            echo '::set-output name=tags::'$TAGS
+        - name: Build and push
           uses: docker/build-push-action@v4
+          needs: gen-tags
           with:
             context: .
             push: ${{ github.event_name != 'pull_request' }}
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
+            tags: ${{ fromJson(steps.gen_tags.outputs.tags) }}
 
     deploy:
         needs: publish
