@@ -1,5 +1,4 @@
-  name: publish
-
+name: publish
 on:
   push:
     branches: [ "main" ]
