@@ -1,74 +1,65 @@
-name: publish
+name: Build, tag, push, and deploy docker image
+
 on:
   push:
-    branches: [ "main" ]
-
-env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
-  IMAGE_NAME: skysourced/findtheducks:latest
+    branches:
+      - 'master'
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - 'master'
 
 jobs:
-    publish:
-        permissions: write-all
-        name: publish image
-        runs-on: ubuntu-latest
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/skysourced/findtheducks
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      -
+        name: Login to Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.PAT }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          
+  deploy:
+    needs: publish
+    name: deploy image
+    runs-on: ubuntu-latest
 
-        steps:
-        - uses: actions/checkout@v3
-        - name: Github Tag Bump
-          uses: anothrNick/github-tag-action@1.67.0
-          env: 
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            WITH_V: true
-        - name: Docker meta
-          id: meta
-          uses: docker/metadata-action@v4
-          with:
-            images: |
-              ghcr.io/skysourced/findtheducks
-            tags: |
-              type=ref,event=branch
-              type=ref,event=pr
-              type=semver,pattern={{version}}
-              type=semver,pattern={{major}}.{{minor}}
-        - name: Login to DockerHub
-          if: github.event_name != 'pull_request'
-          uses: docker/login-action@v2
-          with:
-            registry: ghcr.io
-            username: ${{ github.actor }}
-            password: ${{ secrets.PAT }}
-        - name: Build and push
-          id: gen_tags
-          run: |
-            if [[ $GITHUB_REF == 'refs/tags/'* ]]; then
-              TAGS='["user/image:latest","user/image:'${GITHUB_REF/refs\/tags\//}'"]'
-            else
-              TAGS='["user/image:latest"]'
-            fi
-            echo '::set-output name=tags::'$TAGS
-        - name: Build and push
-          uses: docker/build-push-action@v4
-          with:
-            context: .
-            push: ${{ github.event_name != 'pull_request' }}
-            tags: ${{ fromJson(steps.gen_tags.outputs.tags) }}
-
-    deploy:
-        needs: publish
-        name: deploy image
-        runs-on: ubuntu-latest
-
-        steps:
-        - name: install ssh keys
-          # check this thread to understand why its needed:
-          # <https://stackoverflow.com/a/70447517>
-          run: |
-            install -m 600 -D /dev/null ~/.ssh/id_rsa
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-            ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-        - name: connect and pull
-          run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -p ${{ secrets.SSH_PORT }} "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d && exit"
-        - name: cleanup
-          run: rm -rf ~/.ssh
+    steps:
+    - name: install ssh keys
+      # check this thread to understand why its needed:
+      # <https://stackoverflow.com/a/70447517>
+      run: |
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+    - name: connect and pull
+      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -p ${{ secrets.SSH_PORT }} "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d && exit"
+    - name: cleanup
+      run: rm -rf ~/.ssh
