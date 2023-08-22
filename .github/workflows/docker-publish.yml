@@ -31,7 +31,7 @@ jobs:
               type=ref,event=pr
               type=semver,pattern={{version}}
               type=semver,pattern={{major}}.{{minor}}
-        - name: Login to DockerHub
+        - name: Login to GHCR
           if: github.event_name != 'pull_request'
           uses: docker/login-action@v2
           with:
@@ -43,7 +43,7 @@ jobs:
           with:
             context: .
             push: ${{ github.event_name != 'pull_request' }}
-            tags: ${{ steps.tag_version.outputs.new_tag }}, ${{ steps.meta.outputs.tags }}, ${{ env.IMAGE_NAME }}
+            tags: ${{env.IMAGE_NAME}}:${{ steps.tag_version.outputs.new_tag }}, ${{ steps.meta.outputs.tags }}, ${{ env.IMAGE_NAME }}
 
     deploy:
         needs: build
