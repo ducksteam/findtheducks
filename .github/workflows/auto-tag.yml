@@ -8,6 +8,7 @@ on:
 jobs:
 
     increase-tag:
+      permissions: write-all
       name: Increase tag
       runs-on: ubuntu-latest
       steps:
