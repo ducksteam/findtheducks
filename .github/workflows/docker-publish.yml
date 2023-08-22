@@ -50,7 +50,6 @@ jobs:
             echo '::set-output name=tags::'$TAGS
         - name: Build and push
           uses: docker/build-push-action@v4
-          needs: gen-tags
           with:
             context: .
             push: ${{ github.event_name != 'pull_request' }}
