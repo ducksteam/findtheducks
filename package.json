@@ -2,7 +2,7 @@
   "name": "findtheducks",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "/bin/www.js",
   "type": "module",
   "scripts": {
     "start": "node -r dotenv/config bin/www",
