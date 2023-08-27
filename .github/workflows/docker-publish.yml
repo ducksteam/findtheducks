@@ -25,7 +25,7 @@ jobs:
           with:
             tag: ${{ steps.tag_version.outputs.new_tag }}
             name: Release ${{ steps.tag_version.outputs.new_tag }}
-            body: \u0060``docker pull ghcr.io/skysourced/findtheducks:${{steps.tag_version.outputs.new_tag}}```<br>${{ steps.tag_version.outputs.changelog }}"
+            body: ${{ steps.tag_version.outputs.changelog }}
         - name: Docker meta
           id: meta
           uses: docker/metadata-action@v4
