@@ -8,8 +8,8 @@
         <h1>27-08-23 breach</h1>
         <div class="alert alert-warning">TL;DR: We got ransomwared, and usernames, emails, and password hashes are compromised and may be leaked</div>
         <h3>What happened</h3>
-        <p>In the afternoon of the 27th of August, during the process of transitioning the database to our own servers, one of our engineers (kind of) updated the main database password to <code>postgres</code>. Less than a minute later, they realised their mistake and changed to a secure password. In that time, an attacker entered the database, and copied & deleted our main database.</p>
-        <p>We have a backup process in place, including the files obtained during the transfer process from the Azure servers. When we discovered the attack this morning, (28/08) we ensured the attacker had no more entry vectors, before removing the attackers message and restoring our data.</p>
+        <p>In the afternoon of the 27th of August, our database was ransomwared.</p>
+        <p>We have a backup process in place, so no data was actually lost. When we discovered the attack this morning, (28/08) we ensured the attacker had no more entry vectors, before removing the ransomware message and restoring our data.</p>
         <h3>Result</h3>
         <p>All our user data is in hostile hands. The attacker has access to:
             <ul>
