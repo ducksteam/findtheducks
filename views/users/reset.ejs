@@ -14,6 +14,7 @@
             <div class="alert alert-success"><%= status %></div>
         <% } %>
         <form action="/users/reset" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="formItem">
                 <label>email</label> <br>
                 <input type="text" name="email" required>

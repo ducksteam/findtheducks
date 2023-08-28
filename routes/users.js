@@ -11,7 +11,8 @@ router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
 		const {parsedFinds, firstFinds} = await getProfile(req);
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact() });
+		const csrfToken = req.csrfToken();
+		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact(), csrfToken });
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
@@ -19,7 +20,8 @@ router.get("/profile", async (req, res) => { // Serve profile page
 
 router.get("/register", (req, res) => { // Serve register page
 	const status = decodeURIComponent(req.query.status) || "";
-	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	const csrfToken = req.csrfToken();
+	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
 });
 
 router.get("/login", (req, res) => { // Serve login page
@@ -27,7 +29,8 @@ router.get("/login", (req, res) => { // Serve login page
 		res.redirect("profile");
 	} else {
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("users/login", { status, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+		const csrfToken = req.csrfToken();
+		res.render("users/login", { status, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
 	}
 });
 
@@ -38,7 +41,7 @@ router.get("/logout", (req, res) => { // Handle logout
 
 router.get("/verify", async (req, res) => { // Handle email verification
 	const uuid = req.query.uuid; // Get verification ID from query string
-	if(uuid){ 
+	if(uuid){
 		const user = await sql`SELECT * FROM users WHERE verification_id = ${uuid}`; // Get user with matching verification ID
 		if(user[0]){
 			const issued = new Date(user[0].verification_date);
@@ -62,7 +65,8 @@ router.get("/verify", async (req, res) => { // Handle email verification
 
 router.get("/resend", (req, res) => { // Serve resend verification page
 	const status = decodeURIComponent(req.query.status) || "";
-	res.render("users/resend", { status, pageTitle: "resend verification", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	const csrfToken = req.csrfToken();
+	res.render("users/resend", { status, pageTitle: "resend verification", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken});
 });
 
 router.post("/resend", async (req, res) => { // Handle resend verification form submission
@@ -86,7 +90,8 @@ router.get("/resetlink", async (req, res) => {
 			return res.redirect("/users/reset?status=" + encodeURIComponent("No reset link found"));
 		}
 	}
-	res.render("users/resetlink", { uuid, status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	const csrfToken = req.csrfToken();
+	res.render("users/resetlink", { uuid, status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
 });
 
 router.post("/resetlink", async (req, res) => { // Handle new password form submission
@@ -117,8 +122,9 @@ router.post("/resetlink", async (req, res) => { // Handle new password form subm
 });
 
 router.get("/reset", (req, res) => { // Serve reset password page
+	const csrfToken = req.csrfToken();
 	const status = decodeURIComponent(req.query.status) || "";
-	res.render("users/reset", { status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	res.render("users/reset", { status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
 });
 
 router.post("/reset", async (req, res) => { // Handle reset password form submission

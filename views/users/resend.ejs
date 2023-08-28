@@ -15,6 +15,7 @@
         <% } %>
         <form action="/users/resend" method="post">
             <div class="user_box">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <label>email</label> <br>
                 <input type="text" name="email" required>
             </div>

@@ -34,8 +34,9 @@ router.get("/", async (req, res) => { // Serve home page
 
 router.get("/entry", (req, res) => { // Serve entry page
 	if(req.session.authorised){
+		const csrfToken = req.csrfToken();
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("entry", { pageTitle: "duck entry", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact() });
+		res.render("entry", { pageTitle: "duck entry", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact(), csrfToken });
 	} else {
 		res.redirect("users/login?status=" + encodeURIComponent("Please log in to enter a duck"));
 	}
@@ -52,8 +53,9 @@ router.get("/scoreboard", async (req, res) => { // Serve scoreboard page
 
 router.get("/newduck", (req, res) => { // Serve new duck page
 	if(req.session.permissions > 1){
+		const csrfToken = req.csrfToken();
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("newduck", { pageTitle: "new duck", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact() });
+		res.render("newduck", { pageTitle: "new duck", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact(), csrfToken });
 	} else {
 		res.status(403).render("errors/403", { pageTitle: "403", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 	}

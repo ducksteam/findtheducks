@@ -40,7 +40,7 @@ app.use(session({ // Set up session
 	secure: (process.env.TARGET === "production")
 }));
 
-app.use(lusca.csrf({angular: true})); // Set up CSRF protection
+app.use(lusca.csrf()); // Set up CSRF protection
 
 app.use("/", indexRouter);
 app.use("/users", userRouter); // Use user router

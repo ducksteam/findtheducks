@@ -15,6 +15,7 @@
                 <div class="alert alert-success">Check your email (and spam) for a verification link. This may take up to 5 minutes.</div>
             <% } %>
             <form action="/users/register" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="formItem">
                     <label>email <i>- only players using a whs email will be eligible for the prize</i></label> <br>
                     <input type="text" name="email" required>
