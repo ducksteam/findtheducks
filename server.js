@@ -4,12 +4,12 @@ import bodyParser from "body-parser";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import favicon from "serve-favicon";
+import lusca from "lusca";
 
 import indexRouter from "./routes/index.js";
 import userRouter from "./routes/users.js";
 
 import duckFact from "./duckFacts.js";
-import { csrf } from "lusca";
 
 const app = express(); // Create express app
 
@@ -26,7 +26,16 @@ app.use(logger("dev"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form submissions
 app.use(bodyParser.json());
-app.use(csrf);
+app.use(lusca({
+	csrf: true,
+	csp: { /* ... */},
+	xframe: "SAMEORIGIN",
+	p3p: "ABCDEF",
+	hsts: {maxAge: 31536000, includeSubDomains: true, preload: true},
+	xssProtection: true,
+	nosniff: true,
+	referrerPolicy: "same-origin"
+}));
 
 app.set("view engine", "ejs"); // Set view engine to ejs
 
