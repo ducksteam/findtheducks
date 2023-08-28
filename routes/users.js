@@ -188,17 +188,18 @@ router.post("/password", async (req, res) => { // Handle password update form su
 });
 
 router.post("/delete", async (req,res)=>{
-	const id = req.body
-	const exists = ((await sql`SELECT * FROM users WHERE if = ${id}`) != NULL)
+	const { id } = req.body;
+	const exists = ((await sql`SELECT * FROM users WHERE id = ${id}`).length !== 0);
 	if(!exists){
-		res.redirect("delete?status=" + encodeURIComponent("failed"))
+		res.redirect("delete?status=" + encodeURIComponent("Account does not exist"));
 	}
 	switch(deleteUser(id)){
-		case 0:
-			res.redirect("delete?status=" + encodeURIComponent("success"))
-			break;
-		case -1:
-			res.redirect("delete?status=" + encodeURIComponent("failed"))
+	case 0:
+		req.session.destroy(); // remove user's session
+		res.redirect("delete?status=" + encodeURIComponent("Success!"));
+		break;
+	case -1:
+		res.redirect("delete?status=" + encodeURIComponent("Failed to delete account"));
 	}
 	
 });

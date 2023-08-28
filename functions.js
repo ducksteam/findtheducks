@@ -233,11 +233,13 @@ async function updateUserFinds() {
 
 async function deleteUser(id){
 	try{
-		await sql`DELTE FROM users WHERE id = ${id}`
+		await sql`DELETE FROM users WHERE id = ${id}`;
+		await sql`DELETE FROM finds WHERE user_id = ${id}`;
+		// we also need to recalculate if any ducks were firsts
 	} catch(err){
 		return -1;
 	}
-	return 0
+	return 0;
 }
 
 export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail, sendPasswordResetEmail, sendPasswordIsResetEmail, updatePassword, deleteUser };
