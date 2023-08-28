@@ -60,6 +60,11 @@
                 </tr>
             <% } %>
         </table>
+
+        <script src="script.js"></script>
+        <h3>Delete user</h3>
+        <p>Deleting your account will remove all your ducks. This action cannot be undone.</p>
+        <button id="delete" onclick="deletePrompt()" href="javascript:void(0)">Delete account</button>
     </div>
     <%- include("../templates/footer", {duckFact}) %>
 </body>

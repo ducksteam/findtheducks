@@ -116,6 +116,10 @@ router.post("/resetlink", async (req, res) => { // Handle new password form subm
 	
 });
 
+router.get("/delete", (req, res) => { // Serve delete account page
+	deleteUser(req, res);
+});
+
 router.get("/reset", (req, res) => { // Serve reset password page
 	const status = decodeURIComponent(req.query.status) || "";
 	res.render("users/reset", { status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });

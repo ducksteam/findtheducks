@@ -178,3 +178,18 @@ input[type=checkbox] {
         width: 20%;
     }
 }
+
+#delete {
+    background-color: palevioletred;
+    border-radius: 4px;
+    color: rgb(78, 0, 0);
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}

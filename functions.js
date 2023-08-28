@@ -231,13 +231,12 @@ async function updateUserFinds() {
 	}
 }
 
-async function deleteUser(id){
-	try{
-		await sql`DELTE FROM users WHERE id = ${id}`
-	} catch(err){
-		return -1;
-	}
-	return 0
+async function deleteUser(req, res){
+	res.render("users/delete", { pageTitle: "deleted", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	await sql`DELETE FROM users WHERE id = ${req.session.user.id}`;
+	await sql`DELETE FROM finds WHERE user_id = ${req.session.user.id}`;
+	req.session.destroy();
+	updateUserFinds();
 }
 
 export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail, sendPasswordResetEmail, sendPasswordIsResetEmail, updatePassword, deleteUser };
