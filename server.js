@@ -9,14 +9,24 @@ import indexRouter from "./routes/index.js";
 import userRouter from "./routes/users.js";
 
 import duckFact from "./duckFacts.js";
+import { csrf } from "lusca";
 
 const app = express(); // Create express app
+
+var RateLimit = require("express-rate-limit");
+var limiter = RateLimit({
+	windowMs: 1*60*1000, // 1 minute
+	max: 20, // 20 requests per minute
+});
+
+app.use(limiter);
 
 app.use(favicon("public/favicon.png")); // Serve favicon
 app.use(logger("dev"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form submissions
 app.use(bodyParser.json());
+app.use(csrf);
 
 app.set("view engine", "ejs"); // Set view engine to ejs
 
@@ -27,7 +37,8 @@ app.use(session({ // Set up session
 		maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
 	},
 	resave: false,
-	saveUninitialized: true
+	saveUninitialized: true,
+	secure: (process.env.TARGET === "production")
 }));
 
 app.use("/", indexRouter);
