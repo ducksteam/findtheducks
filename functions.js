@@ -231,4 +231,13 @@ async function updateUserFinds() {
 	}
 }
 
-export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail, sendPasswordResetEmail, sendPasswordIsResetEmail, updatePassword };
+async function deleteUser(id){
+	try{
+		await sql`DELTE FROM users WHERE id = ${id}`
+	} catch(err){
+		return -1;
+	}
+	return 0
+}
+
+export { register, login, entry, getScoreboard, getProfile, insertDuck, sendVerificationEmail, sendPasswordResetEmail, sendPasswordIsResetEmail, updatePassword, deleteUser };

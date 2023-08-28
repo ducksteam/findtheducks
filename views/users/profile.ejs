@@ -35,6 +35,13 @@
             </div>
             <input type="submit" value="Update">
         </form>
+        <form action="/users/delete" method="POST">
+            <div class="formItem">
+                <label>Delete account</label> <br>
+                <input type="hidden" value="<%user.id%>">
+                <input type="submit" value="Delete">
+            </div>
+        </form>
         <h3>Ducks found</h3>
         <p>You've found <b><%- parsedFinds.length %></b> ducks.<br>For <b><%- firstFinds %></b> of those, you were the first.</p>
         <table>
