@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import favicon from "serve-favicon";
+import lusca from "lusca";
+import rateLimit from "express-rate-limit";
 
 import indexRouter from "./routes/index.js";
 import userRouter from "./routes/users.js";
@@ -11,6 +13,13 @@ import userRouter from "./routes/users.js";
 import duckFact from "./duckFacts.js";
 
 const app = express(); // Create express app
+
+var limiter = rateLimit({
+	windowMs: 1*60*1000, // 1 minute
+	max: 20, // 20 requests per minute
+});
+
+app.use(limiter);
 
 app.use(favicon("public/favicon.png")); // Serve favicon
 app.use(logger("dev"));
@@ -27,7 +36,18 @@ app.use(session({ // Set up session
 		maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
 	},
 	resave: false,
-	saveUninitialized: true
+	saveUninitialized: true,
+	secure: (process.env.TARGET === "production")
+}));
+
+app.use(lusca({
+	csrf: true,
+	xframe: "SAMEORIGIN",
+	p3p: "ABCDEF",
+	hsts: {maxAge: 31536000, includeSubDomains: true, preload: true},
+	xssProtection: true,
+	nosniff: true,
+	referrerPolicy: "same-origin"
 }));
 
 app.use("/", indexRouter);

@@ -191,6 +191,22 @@ router.post("/password", async (req, res) => { // Handle password update form su
 	}
 });
 
+router.post("/delete", async (req,res)=>{
+	const id = req.body
+	const exists = ((await sql`SELECT * FROM users WHERE if = ${id}`) != NULL)
+	if(!exists){
+		res.redirect("delete?status=" + encodeURIComponent("failed"))
+	}
+	switch(deleteUser(id)){
+		case 0:
+			res.redirect("delete?status=" + encodeURIComponent("success"))
+			break;
+		case -1:
+			res.redirect("delete?status=" + encodeURIComponent("failed"))
+	}
+	
+});
+
 router.use(express.static("public")); // Serve static files
 
 export default router;

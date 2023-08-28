@@ -41,6 +41,10 @@ router.get("/entry", (req, res) => { // Serve entry page
 	}
 });
 
+router.get("/breach", (req, res) => { // Serve breach report
+	res.render("breach", { pageTitle: "breach report", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+});
+
 router.get("/scoreboard", async (req, res) => { // Serve scoreboard page
 	let scoreboard = await getScoreboard();
 	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised, permissions: req.session.permissions, scoreboard, duckFact: duckFact() });
