@@ -9,10 +9,15 @@ import Filter from "bad-words";
 
 router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
-		const {parsedFinds, firstFinds} = await getProfile(req);
-		const status = decodeURIComponent(req.query.status) || "";
-		const csrfToken = req.csrfToken();
-		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact(), csrfToken });
+		try {
+			const {parsedFinds, firstFinds} = await getProfile(req);
+			const status = decodeURIComponent(req.query.status) || "";
+			const csrfToken = req.csrfToken();
+			res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact(), csrfToken });
+		} catch (err) {
+			console.log(err);
+			res.redirect("login?status=" + encodeURIComponent("Error getting profile"));
+		}
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
