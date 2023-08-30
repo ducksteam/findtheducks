@@ -9,10 +9,15 @@ import Filter from "bad-words";
 
 router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
-		const {parsedFinds, firstFinds} = await getProfile(req);
-		const status = decodeURIComponent(req.query.status) || "";
-		const csrfToken = req.csrfToken();
-		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact(), csrfToken });
+		try {
+			const {parsedFinds, firstFinds} = await getProfile(req);
+			const status = decodeURIComponent(req.query.status) || "";
+			const csrfToken = req.csrfToken();
+			res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact(), csrfToken });
+		} catch (err) {
+			console.log(err);
+			res.redirect("login?status=" + encodeURIComponent("Error getting profile"));
+		}
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
@@ -132,8 +137,13 @@ router.post("/reset", async (req, res) => { // Handle reset password form submis
 	const userCheck = await sql`SELECT * FROM users WHERE email = ${email}`;
 	if(!userCheck[0]) return res.redirect("/users/reset?status=" + encodeURIComponent("Email not found"));
 	const username = userCheck[0].username;
-	const status = await sendPasswordResetEmail(email, username);
-	res.redirect("/users/reset?status=" + encodeURIComponent(status));
+	try {
+		const status = await sendPasswordResetEmail(email, username);
+		res.redirect("/users/reset?status=" + encodeURIComponent(status));
+	} catch (err) {
+		console.log(err);
+		res.redirect("/users/reset?status=" + encodeURIComponent("Error sending reset email"));
+	}
 });
 
 router.post("/profile", async (req, res) => { // Handle username update form submission
