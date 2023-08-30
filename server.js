@@ -16,7 +16,7 @@ const app = express(); // Create express app
 
 var limiter = rateLimit({
 	windowMs: 1*60*1000, // 1 minute
-	max: 35, // 20 requests per minute
+	max: 35, // 35 requests per minute
 });
 
 app.use(limiter);
