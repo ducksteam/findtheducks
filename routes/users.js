@@ -137,8 +137,13 @@ router.post("/reset", async (req, res) => { // Handle reset password form submis
 	const userCheck = await sql`SELECT * FROM users WHERE email = ${email}`;
 	if(!userCheck[0]) return res.redirect("/users/reset?status=" + encodeURIComponent("Email not found"));
 	const username = userCheck[0].username;
-	const status = await sendPasswordResetEmail(email, username);
-	res.redirect("/users/reset?status=" + encodeURIComponent(status));
+	try {
+		const status = await sendPasswordResetEmail(email, username);
+		res.redirect("/users/reset?status=" + encodeURIComponent(status));
+	} catch (err) {
+		console.log(err);
+		res.redirect("/users/reset?status=" + encodeURIComponent("Error sending reset email"));
+	}
 });
 
 router.post("/profile", async (req, res) => { // Handle username update form submission
