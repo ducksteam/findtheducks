@@ -78,19 +78,15 @@ label {
 .instagramIcon {
     font-size: 44px !important;
     color:#000;
-    padding-top: 20px;
+    padding: 20px;
     text-align: center;
-    width: 100%;
-    display: inline;
 }
 
 .githubIcon {
     font-size: 44px !important;
     color:#000;
-    padding-top: 20px;
+    padding: 20px;
     text-align: center;
-    width: 100%;
-    display: inline;
 }
 
 .hamburger {
@@ -107,6 +103,10 @@ footer {
     left: 0;
     width: 100%;
     display: block;
+}
+
+#iconsSpan {
+    margin-left: calc((50vw - 83px));
 }
 
 #duckFact {
