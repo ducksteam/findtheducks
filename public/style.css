@@ -22,7 +22,7 @@
     margin-left: 10%;
     margin-right: 30%;
     margin-top: 60px;
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 120px);
 }
 
 h3 {
