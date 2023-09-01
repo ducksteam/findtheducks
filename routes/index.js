@@ -34,11 +34,16 @@ router.get("/", async (req, res) => { // Serve home page
 
 router.get("/entry", (req, res) => { // Serve entry page
 	if(req.session.authorised){
+		const csrfToken = req.csrfToken();
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("entry", { pageTitle: "duck entry", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact() });
+		res.render("entry", { pageTitle: "duck entry", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact(), csrfToken });
 	} else {
 		res.redirect("users/login?status=" + encodeURIComponent("Please log in to enter a duck"));
 	}
+});
+
+router.get("/breach", (req, res) => { // Serve breach report
+	res.render("breach", { pageTitle: "breach report", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 });
 
 router.get("/scoreboard", async (req, res) => { // Serve scoreboard page
@@ -48,8 +53,9 @@ router.get("/scoreboard", async (req, res) => { // Serve scoreboard page
 
 router.get("/newduck", (req, res) => { // Serve new duck page
 	if(req.session.permissions > 1){
+		const csrfToken = req.csrfToken();
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("newduck", { pageTitle: "new duck", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact() });
+		res.render("newduck", { pageTitle: "new duck", authorised: req.session.authorised, permissions: req.session.permissions, status, duckFact: duckFact(), csrfToken });
 	} else {
 		res.status(403).render("errors/403", { pageTitle: "403", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 	}
@@ -57,8 +63,13 @@ router.get("/newduck", (req, res) => { // Serve new duck page
 
 router.post("/newduck", async (req, res) => { // Handle new duck form submission
 	if(req.session.permissions > 1){
-		const status = await insertDuck(req, req.body.code, req.body.location);
-		res.redirect("newduck?status=" + encodeURIComponent(status));
+		try {
+			const status = await insertDuck(req, req.body.code, req.body.location);
+			res.redirect("newduck?status=" + encodeURIComponent(status));
+		} catch (err) {
+			console.log(err);
+			res.redirect("newduck?status=" + encodeURIComponent("Generic error"));
+		}
 	} else {
 		res.status(403).render("errors/generic", { errorCode: 403, message: "Sorry, you don't have permission to view this page.", pageTitle: "403", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 	}
@@ -66,8 +77,13 @@ router.post("/newduck", async (req, res) => { // Handle new duck form submission
 
 router.post("/entry", async (req, res) => { // Handle entry form submission
 	if(req.session.permissions == 0){
-		const status = await entry(req, res, req.body.duckCode);
-		res.redirect("/entry?status=" + encodeURIComponent(status));
+		try{	
+			const status = await entry(req, res, req.body.duckCode);
+			res.redirect("/entry?status=" + encodeURIComponent(status));
+		} catch (err) {
+			console.log(err);
+			res.redirect("/entry?status=" + encodeURIComponent("Generic error"));
+		}
 	} else {
 		res.status(403).render("errors/generic", { errorCode: 403, message: "you tricky trickster, you can't play the game", pageTitle: "403", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
 	}

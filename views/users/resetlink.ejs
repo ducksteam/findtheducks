@@ -14,13 +14,14 @@
             <div class="alert alert-success"><%= status %></div>
         <% } %>
         <form action="/users/resetlink" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="user_box">
                 <label>new password</label> <br>
-                <input type="password" name="password" required>
+                <input type="password" name="password" autocomplete="off" required>
             </div>
             <div class="user_box">
                 <label>confirm new password</label> <br>
-                <input type="password" name="confirmPassword" required>
+                <input type="password" name="confirmPassword" autocomplete="off" required>
             </div>
             <input type="hidden" name="uuid" value="<%= uuid %>">
             <br>

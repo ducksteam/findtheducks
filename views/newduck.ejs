@@ -14,6 +14,7 @@
             <div class="alert alert-success"><%= status %></div>
         <% } %>
         <form action="/newduck" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="formItem">
                 <label>location description</label> <br>
                 <input type="text" name="location" placeholder="keep it short - 99 chars" required>

@@ -7,20 +7,22 @@
     <%- include("../templates/header", {authorised, permissions}) %>
     <div class="content">
         <h1><%- user.username %></h1>
+        <% if (status == "undefined") {
+        } else if ( status == "Success!" || status == "Username updated") { %>
+            <div class="alert alert-success"><%= status %></div>
+        <% } else { %>
+            <div class="alert alert-danger"><%= status %></div>
+        <% } %>
         <h3>Update username</h3>
         <p>Your username is only shown on the scoreboard.</p>
         <form action="/users/profile" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input type="text" name="username" placeholder="<%= user.username %>" required>
             <input type="submit" value="Update">
         </form>
         <h3>Update password</h3>
-        <% if (status == "undefined") {
-        } else if ( status !== "Success!") { %>
-            <div class="alert alert-danger"><%= status %></div>
-        <% } else { %>
-            <div class="alert alert-success"><%= status %></div>
-        <% } %>
         <form action="/users/password" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="formItem">
                 <label>Enter current password</label> <br>
                 <input type="password" name="oldPassword" required>
@@ -39,17 +41,17 @@
         <p>You've found <b><%- parsedFinds.length %></b> ducks.<br>For <b><%- firstFinds %></b> of those, you were the first.</p>
         <table>
             <tr>
-            <th>Location Description</th>
-            <th>Date Found</th>
-            <th>First?</th>
-            <th>Still there?</th>
+            <th class="profileHeader">Location Description</th>
+            <th class="profileHeader">Date Found</th>
+            <th class="profileHeader">First?</th>
+            <th class="profileHeader">Still there?</th>
             </tr>
             <% for(let i=0; i<parsedFinds.length; i++) { %>
                 <tr>
                 <td><%= parsedFinds[i].location %></td>
                 <td><%= parsedFinds[i].date %></td>
-                <td><%= parsedFinds[i].first ? "✓" : "x" %></td>
-                <td><%= parsedFinds[i].obtainable ? "✓" : "x" %></td>
+                <td class="tableCheck"><%= parsedFinds[i].first ? "✓" : "x" %></td>
+                <td class="tableCheck"><%= parsedFinds[i].obtainable ? "✓" : "x" %></td>
                 </tr>
             <% } %>
         </table>

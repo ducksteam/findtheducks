@@ -4,12 +4,20 @@ import { register, login, getProfile, sendVerificationEmail, sendPasswordResetEm
 import sql from "../db.js";
 import duckFact from "../duckFacts.js";
 import bcrypt from "bcrypt";
+import Filter from "bad-words";
+
 
 router.get("/profile", async (req, res) => { // Serve profile page
 	if(req.session.authorised){
-		const {parsedFinds, firstFinds} = await getProfile(req);
-		const status = decodeURIComponent(req.query.status) || "";
-		res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact() });
+		try {
+			const {parsedFinds, firstFinds} = await getProfile(req);
+			const status = decodeURIComponent(req.query.status) || "";
+			const csrfToken = req.csrfToken();
+			res.render("users/profile", { status, pageTitle: "profile", user: req.session.user, authorised: req.session.authorised, permissions: req.session.permissions, parsedFinds, firstFinds, duckFact: duckFact(), csrfToken });
+		} catch (err) {
+			console.log(err);
+			res.redirect("login?status=" + encodeURIComponent("Error getting profile"));
+		}
 	} else {
 		res.redirect("login?status=" + encodeURIComponent("Please log in to view your profile"));
 	}
@@ -17,7 +25,8 @@ router.get("/profile", async (req, res) => { // Serve profile page
 
 router.get("/register", (req, res) => { // Serve register page
 	const status = decodeURIComponent(req.query.status) || "";
-	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	const csrfToken = req.csrfToken();
+	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
 });
 
 router.get("/login", (req, res) => { // Serve login page
@@ -25,7 +34,8 @@ router.get("/login", (req, res) => { // Serve login page
 		res.redirect("profile");
 	} else {
 		const status = decodeURIComponent(req.query.status) || "";
-		res.render("users/login", { status, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+		const csrfToken = req.csrfToken();
+		res.render("users/login", { status, pageTitle: "sign in", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
 	}
 });
 
@@ -36,7 +46,7 @@ router.get("/logout", (req, res) => { // Handle logout
 
 router.get("/verify", async (req, res) => { // Handle email verification
 	const uuid = req.query.uuid; // Get verification ID from query string
-	if(uuid){ 
+	if(uuid){
 		const user = await sql`SELECT * FROM users WHERE verification_id = ${uuid}`; // Get user with matching verification ID
 		if(user[0]){
 			const issued = new Date(user[0].verification_date);
@@ -60,7 +70,8 @@ router.get("/verify", async (req, res) => { // Handle email verification
 
 router.get("/resend", (req, res) => { // Serve resend verification page
 	const status = decodeURIComponent(req.query.status) || "";
-	res.render("users/resend", { status, pageTitle: "resend verification", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	const csrfToken = req.csrfToken();
+	res.render("users/resend", { status, pageTitle: "resend verification", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken});
 });
 
 router.post("/resend", async (req, res) => { // Handle resend verification form submission
@@ -84,7 +95,8 @@ router.get("/resetlink", async (req, res) => {
 			return res.redirect("/users/reset?status=" + encodeURIComponent("No reset link found"));
 		}
 	}
-	res.render("users/resetlink", { uuid, status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	const csrfToken = req.csrfToken();
+	res.render("users/resetlink", { uuid, status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
 });
 
 router.post("/resetlink", async (req, res) => { // Handle new password form submission
@@ -115,8 +127,9 @@ router.post("/resetlink", async (req, res) => { // Handle new password form subm
 });
 
 router.get("/reset", (req, res) => { // Serve reset password page
+	const csrfToken = req.csrfToken();
 	const status = decodeURIComponent(req.query.status) || "";
-	res.render("users/reset", { status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact() });
+	res.render("users/reset", { status, pageTitle: "reset password", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
 });
 
 router.post("/reset", async (req, res) => { // Handle reset password form submission
@@ -124,12 +137,34 @@ router.post("/reset", async (req, res) => { // Handle reset password form submis
 	const userCheck = await sql`SELECT * FROM users WHERE email = ${email}`;
 	if(!userCheck[0]) return res.redirect("/users/reset?status=" + encodeURIComponent("Email not found"));
 	const username = userCheck[0].username;
-	const status = await sendPasswordResetEmail(email, username);
-	res.redirect("/users/reset?status=" + encodeURIComponent(status));
+	try {
+		const status = await sendPasswordResetEmail(email, username);
+		res.redirect("/users/reset?status=" + encodeURIComponent(status));
+	} catch (err) {
+		console.log(err);
+		res.redirect("/users/reset?status=" + encodeURIComponent("Error sending reset email"));
+	}
 });
 
-router.post("/profile", (req, res) => { // Handle username update form submission
+router.post("/profile", async (req, res) => { // Handle username update form submission
+	const username = req.body.username;
+	let filter = new Filter();
 	if(req.session.authorised){
+		// Check username is not profane
+		if(filter.isProfane(username)){
+			return res.redirect("profile?status=" + encodeURIComponent("Username contains profanity"));
+		}
+	
+		// Check username is not taken
+		let usernameCheck = await sql`select * from users where username = ${username}`;
+		if (usernameCheck.length !== 0) {
+			return res.redirect("profile?status=" + encodeURIComponent("Username already in use"));
+		} 
+	
+		if(username.length > 30){
+			return res.redirect("profile?status=" + encodeURIComponent("Username cannot be longer than 30 characters"));
+		}
+
 		sql`UPDATE users SET username = ${req.body.username} WHERE id = ${req.session.user.id}`.then(() => {
 			req.session.user.username = req.body.username;
 			res.redirect("profile?status=" + encodeURIComponent("Username updated"));

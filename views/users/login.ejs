@@ -15,13 +15,14 @@
                 <div class="alert alert-danger"><%= status %></div>
             <% } %>
             <form action="/users/login" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="formItem">
                     <label>email</label> <br>
                     <input type="text" name="email" required>
                 </div>
                 <div class="formItem">
                     <label>password</label> <br>
-                    <input type="password" name="password" required>
+                    <input type="password" name="password" autocomplete="off" required>
                 </div>
                 <button type="submit">welcome back</button>
                 <br>

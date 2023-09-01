@@ -15,6 +15,7 @@
                 <div class="alert alert-success">Check your email (and spam) for a verification link. This may take up to 5 minutes.</div>
             <% } %>
             <form action="/users/register" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="formItem">
                     <label>email <i>- only players using a whs email will be eligible for the prize</i></label> <br>
                     <input type="text" name="email" required>
@@ -25,11 +26,11 @@
                 </div>
                 <div class="formItem">
                     <label>password</label> <br>
-                    <input type="password" name="password" required>
+                    <input type="password" name="password" autocomplete="off" required>
                 </div>
                 <div class="formItem">
                     <label>confirm password</label> <br>
-                    <input type="password" name="confirmPassword" required>
+                    <input type="password" name="confirmPassword" autocomplete="off" required>
                 </div>
                 <br>
                 <button type="submit">enter the duckening</button>

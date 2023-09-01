@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include("./templates/head") %>
+<body>
+    <%- include("./templates/header", {authorised, permissions}) %>
+    <div class="content">
+        <h1>27-08-23 breach</h1>
+        <div class="alert alert-warning">TL;DR: We got ransomwared, and usernames, emails, and password hashes are compromised and may be leaked</div>
+        <h3>What happened</h3>
+        <p>In the afternoon of the 27th of August, our database was ransomwared.</p>
+        <p>We have a backup process in place, so no data was actually lost. When we discovered the attack this morning, (28/08) we ensured the attacker had no more entry vectors, before removing the ransomware message and restoring our data.</p>
+        <h3>Result</h3>
+        <p>All our user data is in hostile hands. The attacker has access to:
+            <ul>
+                <li><b>Username</b></li>
+                <li><b>Email</b></li>
+                <li><b>Password hash</b> (this is a non-reversible encrypted version of your password, not your actual password)</li>
+                <li>Permissions integer</li>
+                <li>Finds & first finds</li>
+                <li>Email verification uuids</li>
+                <li>Password reset uuids</li>
+            </ul>
+            All email verification and password reset information has thankfully expired, so the attacker has not been able to use this to gain access to any accounts. </p>
+        <p>The attacker also had access to all the duck information and find information, but that's not as sensitive. If someone shoots to the top of the leaderboard, we'll know. If you see an uptick in spam email to your associated email, sorry about that.</p>
+        <br>
+        <p><b>This is exactly why you should use different passwords for everything, or better yet, use a password manager!!</b></p>
+        <p><b>This attack was due to a tiny error, and we don't expect it to happen again. If you have any concerns or want to know more, please contact us on Instagram and we will give you more info.</b></p>
+    </div>
+    <%- include("./templates/footer", {duckFact}) %>
+</html>
