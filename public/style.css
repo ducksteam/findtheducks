@@ -89,6 +89,9 @@ label {
     user-select: none;
 }
 
+.tableCheck {
+    text-align: center;
+}
 
 footer {
     background-color: darkgray;
@@ -127,6 +130,10 @@ tr:nth-child(even) {
 
 table {
     width: 70%;
+}
+
+.profileHeader {
+    text-align: center;
 }
 
 .scoreboardUsername {
