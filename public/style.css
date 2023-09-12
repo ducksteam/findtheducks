@@ -107,7 +107,7 @@ footer {
     width: 100%;
 }
 
-#breach {
+.footerText {
     width: 100%;
     display: inline-block;
     font-size: 18px;
