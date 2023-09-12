@@ -60,7 +60,7 @@ p {
 }
 
 #home-link {
-    margin-left: 20px;
+    margin-left: 0px;
 }
 
 #profile-link {
@@ -107,7 +107,14 @@ footer {
     width: 100%;
 }
 
-#breach {
+#headerTitle {
+    font-size: 20px;
+    padding: 16px 15px 16px 15px;
+    border-right: #fff solid 2px;
+    margin-right: 5px;
+}
+
+.footerText {
     width: 100%;
     display: inline-block;
     font-size: 18px;
