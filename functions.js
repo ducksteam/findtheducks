@@ -15,7 +15,7 @@ async function register(email, username, password, confirmPassword) {
 	}
 
 	// Check email is valid
-	const mailFormat = /^(?:\w+[.-]?\w+)*@\w+(?:[.-]?\w+)*(\.\w{2,3})+$/;	
+	const mailFormat = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;	
 	if (!email.match(mailFormat)) {
 		return "Invalid email";
 	}
@@ -72,7 +72,7 @@ async function updatePassword(uuid, password){
 
 async function login(req, res, email, password) {
 	// Check email is valid
-	const mailFormat = /^(?:\w+[.-]?\w+)*@\w+(?:[.-]?\w+)*(\.\w{2,3})+$/;	
+	const mailFormat = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;	
 	if (!email.match(mailFormat)) {
 		return "Invalid email";
 	}
