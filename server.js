@@ -40,11 +40,6 @@ app.use(session({ // Set up session
 	secure: (process.env.TARGET === "production")
 }));
 
-app.use((req, res, next) => { // shh
-	res.setHeader("X-Quack", process.env.CODE);
-	next();
-});
-
 app.use(lusca.csrf()); // Set up CSRF protection
 
 app.use("/", indexRouter);
