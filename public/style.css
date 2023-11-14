@@ -105,11 +105,12 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
+    margin-top: 30px;
 }
 
 #headerTitle {
     font-size: 20px;
-    padding: 16px 15px 16px 15px;
+    padding: 16px 15px 16px 0px;
     border-right: #fff solid 2px;
     margin-right: 5px;
 }
@@ -167,8 +168,8 @@ input[type=checkbox] {
 
 @media screen and ( max-width: 700px ) {
     .content {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 50px;
+        margin-right: 60px;
     }
 
     .menu {
@@ -211,4 +212,10 @@ input[type=checkbox] {
     .scoreboard-stat {
         width: 20%;
     }
+}
+
+.alert-dark {
+    color: #1b1e21;
+    background-color: #d6d8d9;
+    border-color: #c6c8ca;
 }

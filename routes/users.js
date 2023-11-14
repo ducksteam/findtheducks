@@ -26,7 +26,7 @@ router.get("/profile", async (req, res) => { // Serve profile page
 router.get("/register", (req, res) => { // Serve register page
 	const status = decodeURIComponent(req.query.status) || "";
 	const csrfToken = req.csrfToken();
-	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken });
+	res.render("users/register", { status, pageTitle: "sign up", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact(), csrfToken, quack: process.env.CODE });
 });
 
 router.get("/login", (req, res) => { // Serve login page
