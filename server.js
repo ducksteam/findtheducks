@@ -16,7 +16,7 @@ const app = express(); // Create express app
 
 var limiter = rateLimit({
 	windowMs: 1*60*1000, // 1 minute
-	max: 20, // 20 requests per minute
+	max: 35, // 35 requests per minute
 });
 
 app.use(limiter);
@@ -40,15 +40,7 @@ app.use(session({ // Set up session
 	secure: (process.env.TARGET === "production")
 }));
 
-app.use(lusca({
-	csrf: true,
-	xframe: "SAMEORIGIN",
-	p3p: "ABCDEF",
-	hsts: {maxAge: 31536000, includeSubDomains: true, preload: true},
-	xssProtection: true,
-	nosniff: true,
-	referrerPolicy: "same-origin"
-}));
+app.use(lusca.csrf()); // Set up CSRF protection
 
 app.use("/", indexRouter);
 app.use("/users", userRouter); // Use user router

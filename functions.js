@@ -15,7 +15,7 @@ async function register(email, username, password, confirmPassword) {
 	}
 
 	// Check email is valid
-	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+	const mailFormat = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;	
 	if (!email.match(mailFormat)) {
 		return "Invalid email";
 	}
@@ -72,7 +72,7 @@ async function updatePassword(uuid, password){
 
 async function login(req, res, email, password) {
 	// Check email is valid
-	const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+	const mailFormat = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;	
 	if (!email.match(mailFormat)) {
 		return "Invalid email";
 	}
@@ -117,15 +117,24 @@ async function entry(req, res, duckCode){
 		await sql`update ducks set first_user = ${req.session.user.id} where id = ${duckCheck[0].id}`;
 	}
 	// Insert find into database
-	await sql`insert into finds (user_id, duck_id, find_date) VALUES (${req.session.user.id}, ${duckCheck[0].id}, NOW())`;
+	try {
+		await sql`insert into finds (user_id, duck_id, find_date) VALUES (${req.session.user.id}, ${duckCheck[0].id}, NOW())`;
+	} catch (err) {
+		console.log(err);
+		return "Error inserting into database";
+	}
 	// Update scoreboard
 	await updateUserFinds();
 	return "Success!";
 }
 
 async function getScoreboard(){
-	let scoreboard = await sql`select username, finds, first_finds from users where permissions = 0 order by first_finds desc, finds desc, id asc`;
-	return scoreboard;
+	try {
+		let scoreboard = await sql`select username, finds, first_finds from users where permissions = 0 order by first_finds desc, finds desc, id asc`;
+		return scoreboard;
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 async function getProfile(req){
