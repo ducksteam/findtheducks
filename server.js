@@ -12,17 +12,12 @@ import userRouter from "./routes/users.js";
 
 import duckFact from "./duckFacts.js";
 
-import naxIpware from "@fullerstack/nax-ipware";
-const Ipware = naxIpware.Ipware;
-
 const app = express(); // Create express app
 
 var limiter = rateLimit({
-	windowMs: 1*60*1000, // 1 minute
+	windowMs: 60*1000, // 1 minute
 	max: 35, // 35 requests per minute
 });
-
-const ipware = new Ipware(); 
 
 app.use(limiter);
 
@@ -46,11 +41,6 @@ app.use(session({ // Set up session
 }));
 
 app.use(lusca.csrf()); // Set up CSRF protection
-
-app.use((req, res, next) => { 
-	console.log(ipware.getClientIP(req));
-	next();
-});
 
 app.use("/", indexRouter);
 app.use("/users", userRouter); // Use user router
