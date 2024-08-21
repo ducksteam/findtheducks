@@ -21,7 +21,7 @@
         <br>
         <h3>stats</h3>
         <% if (stats.showStats) { %>
-            <p><b><%- stats.totalDucks %></b> ducks have been placed, of which <b><%- stats.lostDucks %></b> have been removed, for a total of <b><%- stats.availableDucks %></b> still available. <b><%- stats.unfoundDucks %></b> have not been found at all, and are still available.</p>
+            <p><b><%- stats.totalDucks %></b> ducks have been placed (<b><%- stats.roundOneDucks %></b> from r1, <b><%- stats.roundTwoDucks %></b> from r2), of which <b><%- stats.lostDucks %></b> have been removed (<b><%- stats.roundOneLostDucks %></b> from r1, <b><%- stats.roundTwoLostDucks %></b> from r2), for a total of <b><%- stats.availableDucks %></b> still available. <b><%- stats.unfoundDucks %></b> have not been found at all, and are still available.</p>
             <p><b><%- stats.totalUsers %></b> players have found a total of <b><%- stats.totalFinds %></b> ducks.</p>    
         <% } else {%>
             <p>sign in to view stats</p>
