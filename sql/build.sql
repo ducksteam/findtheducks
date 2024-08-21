@@ -8,8 +8,10 @@ CREATE TABLE users (
     username VARCHAR(30),
     password_hash VARCHAR(60),
     permissions SMALLINT,
-    finds INT,
-    first_finds INT,
+    round_1_finds INT,
+    round_1_first_finds INT,
+    round_2_finds INT,
+    round_2_first_finds INT,
     verification_id VARCHAR(36) NULL,
     verified BOOLEAN DEFAULT FALSE,
     verification_date TIMESTAMP NULL,
@@ -24,6 +26,7 @@ CREATE TABLE ducks (
     date_placed TIMESTAMP,
     first_user INT NULL DEFAULT NULL,
     obtainable BOOLEAN DEFAULT TRUE,
+    round_id SMALLINT
 );
 
 CREATE TABLE finds (

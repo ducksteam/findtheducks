@@ -60,7 +60,7 @@ p {
 }
 
 #home-link {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 #profile-link {
@@ -108,13 +108,6 @@ footer {
     margin-top: 30px;
 }
 
-#headerTitle {
-    font-size: 20px;
-    padding: 16px 15px 16px 0px;
-    border-right: #fff solid 2px;
-    margin-right: 5px;
-}
-
 .footerText {
     width: 100%;
     display: inline-block;
@@ -154,7 +147,7 @@ table {
     text-align: center;
 }
 
-.scoreboardUsername {
+.scoreboard-username {
     text-align: left;
 }
 
@@ -212,10 +205,4 @@ input[type=checkbox] {
     .scoreboard-stat {
         width: 20%;
     }
-}
-
-.alert-dark {
-    color: #1b1e21;
-    background-color: #d6d8d9;
-    border-color: #c6c8ca;
 }

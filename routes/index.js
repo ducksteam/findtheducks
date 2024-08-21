@@ -47,8 +47,11 @@ router.get("/breach", (req, res) => { // Serve breach report
 });
 
 router.get("/scoreboard", async (req, res) => { // Serve scoreboard page
-	let scoreboard = await getScoreboard();
-	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised, permissions: req.session.permissions, scoreboard, duckFact: duckFact() });
+	let roundOneScoreboard = await getScoreboard(1, false);
+	let roundTwoScoreboard = await getScoreboard(2, true);
+	if (roundOneScoreboard === 0 || roundOneScoreboard === undefined) roundOneScoreboard = [];
+	if (roundTwoScoreboard === 0 || roundTwoScoreboard === undefined) roundTwoScoreboard = [];
+	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised, permissions: req.session.permissions, roundOneScoreboard, roundTwoScoreboard, duckFact: duckFact() });
 });
 
 router.get("/newduck", (req, res) => { // Serve new duck page
@@ -78,8 +81,8 @@ router.post("/newduck", async (req, res) => { // Handle new duck form submission
 router.post("/entry", async (req, res) => { // Handle entry form submission
 	if(req.session.permissions === 0){
 		try{	
-			const status = await entry(req, res, req.body.duckCode);
-			res.redirect("/entry?status=" + encodeURIComponent(status));
+			const {status, round} = await entry(req, res, req.body.duckCode);
+			res.redirect("/entry?status=" + encodeURIComponent(status + (round === 2 ? "" : ", but this resilient duck was from round 1")));
 		} catch (err) {
 			console.log(err);
 			res.redirect("/entry?status=" + encodeURIComponent("Generic error"));
