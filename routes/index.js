@@ -91,8 +91,8 @@ router.post("/newduck", async (req, res) => { // Handle new duck form submission
 router.post("/entry", async (req, res) => { // Handle entry form submission
 	if(req.session.permissions === 0){
 		try{	
-			const {status, round} = await entry(req, res, req.body.duckCode);
-			res.redirect("/entry?status=" + encodeURIComponent(status + (round === 2 ? "" : ", but this resilient duck was from round 1")));
+			const status = await entry(req, res, req.body.duckCode);
+			res.redirect("/entry?status=" + encodeURIComponent(status));
 		} catch (err) {
 			console.log(err);
 			res.redirect("/entry?status=" + encodeURIComponent("Generic error"));

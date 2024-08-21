@@ -125,7 +125,8 @@ async function entry(req, res, duckCode){
 	}
 	// Update scoreboard
 	await updateUserFinds();
-	return {status: "Success!", round: duckCheck[0].round_id};
+	if (duckCheck[0].round_id === 1) return "Success, but this resilient duck was from round 1";
+	else return "Success!";
 }
 
 async function getScoreboard(roundId, includeZeroFinds) {

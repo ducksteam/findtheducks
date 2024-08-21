@@ -10,6 +10,8 @@
         <p>Enter the 8 character code found on the duck.</p>
         <% if(status === "Success!") {%>
         <div class="alert alert-success"><%= status %></div>
+        <% } else if(status === "Success, but this resilient duck was from round 1") {%>
+            <div class="alert alert-secondary"><%= status %></div>
         <% } else if(status !== "undefined") {%>
         <div class="alert alert-danger"><%= status %></div>
         <% } %>
