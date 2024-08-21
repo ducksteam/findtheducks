@@ -8,8 +8,8 @@
     <div class="content">
         <div class="login_box">
             <h2>rejoin the flock</h2>
-            <% if (status == "undefined") {
-            } else if ( status == "Success!" || status == "Logged out" || status == "Email verified" || status == "Password reset") { %>
+            <% if (status === "undefined") {
+            } else if ( status === "Success!" || status === "Logged out" || status === "Email verified" || status === "Password reset") { %>
                 <div class="alert alert-success"><%= status %></div>
             <% } else { %>
                 <div class="alert alert-danger"><%= status %></div>
@@ -17,12 +17,16 @@
             <form action="/users/login" method="post">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="formItem">
-                    <label>email</label> <br>
-                    <input type="text" name="email" required>
+                    <label>
+                        email <br>
+                        <input type="text" name="email" required>
+                    </label>
                 </div>
                 <div class="formItem">
-                    <label>password</label> <br>
-                    <input type="password" name="password" autocomplete="off" required>
+                    <label>
+                        password <br>
+                        <input type="password" name="password" autocomplete="off" required>
+                    </label>
                 </div>
                 <button type="submit">welcome back</button>
                 <br>

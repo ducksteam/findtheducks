@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <%- include("./templates/head") %>
+</head>
 <body>
     <%- include("./templates/header", {authorised, permissions}) %>
     <div class="content">
@@ -29,4 +30,5 @@
         <p><b>This attack was due to a tiny error, and we don't expect it to happen again. If you have any concerns or want to know more, please contact us at <a href="mailto:contact@findtheducks.live">contact@findtheducks.live</a> or the <a href="https://privacy.org.nz/about-us/contact-us/">Privacy Commissioner's office</a>.</b></p>
     </div>
     <%- include("./templates/footer", {duckFact}) %>
+</body>
 </html>

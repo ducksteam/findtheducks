@@ -7,7 +7,7 @@
     <%- include("../templates/header", {authorised, permissions}) %>
     <div class="content">
         <h1>Reset password</h1>
-        <% if (status == "undefined") {
+        <% if (status === "undefined") {
         } else if ( status !== "Success!") { %>
             <div class="alert alert-danger"><%= status %></div>
         <% } else { %>
@@ -16,16 +16,21 @@
         <form action="/users/resetlink" method="post">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="user_box">
-                <label>new password</label> <br>
-                <input type="password" name="password" autocomplete="off" required>
+                <label>
+                    new password <br>
+                    <input type="password" name="password" autocomplete="off" required>
+                </label>
             </div>
             <div class="user_box">
-                <label>confirm new password</label> <br>
-                <input type="password" name="confirmPassword" autocomplete="off" required>
+                <label>
+                    confirm password <br>
+                    <input type="password" name="confirmPassword" autocomplete="off" required>
+                </label>
             </div>
             <input type="hidden" name="uuid" value="<%= uuid %>">
             <br>
             <button type="submit">reset password</button>
+        </form>
     </div>
     <%- include("../templates/footer", {duckFact}) %>
 </body>
