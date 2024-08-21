@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import Filter from "bad-words";
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 import FormData from "form-data";
 import Mailgun from "mailgun.js";
 import sql from "./db.js";
@@ -113,7 +113,7 @@ async function entry(req, res, duckCode){
 	}
 	// Check if duck not yet been found and change first finder on duck
 	let firstCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id}`;
-	if(firstCheck.length == 0){ 
+	if(firstCheck.length === 0){
 		await sql`update ducks set first_user = ${req.session.user.id} where id = ${duckCheck[0].id}`;
 	}
 	// Insert find into database
@@ -130,8 +130,10 @@ async function entry(req, res, duckCode){
 
 async function getScoreboard(){
 	try {
-		let scoreboard = await sql`select username, finds, first_finds from users where permissions = 0 order by first_finds desc, finds desc, id asc`;
-		return scoreboard;
+		return await sql`select username, finds, first_finds
+                                   from users
+                                   where permissions = 0
+                                   order by first_finds desc, finds desc, id`;
 	} catch (err) {
 		console.log(err);
 	}
@@ -148,10 +150,10 @@ async function getProfile(req){
 		parsedFinds.push({
 			location: duck[0].location_description,
 			date: new Date(find.find_date).toLocaleDateString("en-NZ"),
-			first: (first[0].first_user == req.session.user.id) ? true : false,
+			first: (first[0].first_user === req.session.user.id),
 			obtainable: obtainable[0].obtainable
 		});
-		if(first[0].first_user == req.session.user.id){
+		if(first[0].first_user === req.session.user.id){
 			firstFinds++;
 		}
 	}

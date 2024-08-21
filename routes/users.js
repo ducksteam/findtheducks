@@ -1,10 +1,19 @@
 import express from "express";
-const router = express.Router();
-import { register, login, getProfile, sendVerificationEmail, sendPasswordResetEmail, updatePassword } from "../functions.js";
+import {
+	getProfile,
+	login,
+	register,
+	sendPasswordIsResetEmail,
+	sendPasswordResetEmail,
+	sendVerificationEmail,
+	updatePassword
+} from "../functions.js";
 import sql from "../db.js";
 import duckFact from "../duckFacts.js";
 import bcrypt from "bcrypt";
 import Filter from "bad-words";
+
+const router = express.Router();
 
 
 router.get("/profile", async (req, res) => { // Serve profile page
@@ -117,6 +126,7 @@ router.post("/resetlink", async (req, res) => { // Handle new password form subm
 		} else { // Update password 
 			const status = await updatePassword(req.body.uuid, req.body.password);
 			if(status === "Success!"){
+				await sendPasswordIsResetEmail(user[0].email, user[0].username);
 				res.redirect("/users/login?status=" + encodeURIComponent("Password reset"));
 			} else {
 				res.redirect("/users/resetlink?status=" + encodeURIComponent(status));
@@ -192,7 +202,7 @@ router.post("/password", async (req, res) => { // Handle password update form su
 	if(req.session.authorised){
 		const { oldPassword, password, confirmPassword } = req.body;
 		if (password !== confirmPassword) return res.redirect("profile?status=" + encodeURIComponent("Passwords do not match"));
-		if (password == oldPassword) return res.redirect("profile?status=" + encodeURIComponent("New password cannot be the same as the old password"));
+		if (password === oldPassword) return res.redirect("profile?status=" + encodeURIComponent("New password cannot be the same as the old password"));
 		const hash = await bcrypt.hash(password, 10);
 		try {
 			await sql`UPDATE users SET password_hash = ${hash} WHERE id = ${req.session.user.id}`;

@@ -1,9 +1,9 @@
 import express from "express";
-const router = express.Router();
-
-import { entry, getScoreboard, insertDuck } from "../functions.js";
+import {entry, getScoreboard, insertDuck} from "../functions.js";
 import duckFact from "../duckFacts.js";
 import sql from "../db.js";
+
+const router = express.Router();
 
 router.get("/", async (req, res) => { // Serve home page
 	let stats = {
@@ -76,7 +76,7 @@ router.post("/newduck", async (req, res) => { // Handle new duck form submission
 });
 
 router.post("/entry", async (req, res) => { // Handle entry form submission
-	if(req.session.permissions == 0){
+	if(req.session.permissions === 0){
 		try{	
 			const status = await entry(req, res, req.body.duckCode);
 			res.redirect("/entry?status=" + encodeURIComponent(status));

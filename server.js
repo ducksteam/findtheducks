@@ -14,9 +14,9 @@ import duckFact from "./duckFacts.js";
 
 const app = express(); // Create express app
 
-var limiter = rateLimit({
-	windowMs: 60*1000, // 1 minute
-	max: 35, // 35 requests per minute
+const limiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minute
+	max: 60, // 60 requests per minute
 });
 
 app.use(limiter);
@@ -40,7 +40,7 @@ app.use(session({ // Set up session
 	secure: (process.env.TARGET === "production")
 }));
 
-app.use(lusca.csrf()); // Set up CSRF protection
+app.use(lusca.csrf({})); // Set up CSRF protection
 
 app.use("/", indexRouter);
 app.use("/users", userRouter); // Use user router
