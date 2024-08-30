@@ -7,7 +7,7 @@
     <%- include("../templates/header", {authorised, permissions}) %>
     <div class="content">
         <div class="login_box">
-            <h2>join the duckers</h2>
+            <h3>join the duckers</h3>
             <% if (status === "undefined") {
             } else if ( status !== "Success!") { %>
                 <div class="alert alert-danger"><%= status %></div>
