@@ -14,12 +14,15 @@ async function register(email, username, password, confirmPassword) {
 		return "Passwords do not match";
 	}
 
+	// Case lock email
+	email = email.toLowerCase();
+
 	// Check email is valid
 	const mailFormat = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;	
 	if (!email.match(mailFormat)) {
 		return "Invalid email";
 	}
-	
+
 	// Check username is valid
 	let emailCheck = await sql`select * from users where email = ${email}`;
 	if (emailCheck.length !== 0) {
@@ -71,6 +74,9 @@ async function updatePassword(uuid, password){
 }
 
 async function login(req, res, email, password) {
+	// Case lock email
+	email = email.toLowerCase();
+
 	// Check email is valid
 	const mailFormat = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;	
 	if (!email.match(mailFormat)) {
