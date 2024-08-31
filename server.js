@@ -27,6 +27,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form submissions
 app.use(bodyParser.json());
 
+app.set("trust proxy", 1);
 app.set("view engine", "ejs"); // Set view engine to ejs
 
 app.use(session({ // Set up session
