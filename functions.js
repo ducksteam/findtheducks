@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import Filter from "bad-words";
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 import FormData from "form-data";
 import Mailgun from "mailgun.js";
 import sql from "./db.js";
@@ -44,7 +44,7 @@ async function register(email, username, password, confirmPassword) {
 	// Hash password and insert into database
 	try {
 		const passwordHash = await bcrypt.hash(password, 10);
-		await sql`insert into users (email, username, password_hash, permissions, finds, first_finds) values (${email}, ${username}, ${passwordHash}, 0, 0, 0)`;
+		await sql`insert into users (email, username, password_hash) values (${email}, ${username}, ${passwordHash})`;
 	} catch (err) {
 		console.log(err);
 		return "Error inserting into database";
@@ -111,9 +111,12 @@ async function entry(req, res, duckCode){
 	if (findCheck.length !== 0) {
 		return "Duck already found";
 	}
+
+	if (duckCheck[0].round_id === 1) return "Success, but this resilient duck was from round 1";
+
 	// Check if duck not yet been found and change first finder on duck
 	let firstCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id}`;
-	if(firstCheck.length == 0){ 
+	if(firstCheck.length === 0){
 		await sql`update ducks set first_user = ${req.session.user.id} where id = ${duckCheck[0].id}`;
 	}
 	// Insert find into database
@@ -128,10 +131,39 @@ async function entry(req, res, duckCode){
 	return "Success!";
 }
 
-async function getScoreboard(){
+async function getScoreboard(roundId, includeZeroFinds) {
 	try {
-		let scoreboard = await sql`select username, finds, first_finds from users where permissions = 0 order by first_finds desc, finds desc, id asc`;
-		return scoreboard;
+		if(includeZeroFinds){
+			if (roundId === 1) {
+				return await sql`select username, round_1_finds, round_1_first_finds
+								   from users
+								   where permissions = 0
+								   order by round_1_first_finds desc, round_1_finds desc, id`;
+			} else if (roundId === 2) {
+				return await sql`select username, round_2_finds, round_2_first_finds
+								   from users
+								   where permissions = 0
+								   order by round_2_first_finds desc, round_2_finds desc, id`;
+			} else {
+				console.error("Invalid roundId " + roundId);
+				return 0;
+			}
+		} else {
+			if (roundId === 1) {
+				return await sql`select username, round_1_finds, round_1_first_finds
+								   from users
+								   where permissions = 0 and round_1_finds > 0
+								   order by round_1_first_finds desc, round_1_finds desc, id`;
+			} else if (roundId === 2) {
+				return await sql`select username, round_2_finds, round_2_first_finds
+								   from users
+								   where permissions = 0 and round_2_finds > 0
+								   order by round_2_first_finds desc, round_2_finds desc, id`;
+			} else {
+				console.error("Invalid roundId " + roundId);
+				return 0;
+			}
+		}
 	} catch (err) {
 		console.log(err);
 	}
@@ -142,16 +174,15 @@ async function getProfile(req){
 	let firstFinds = 0;
 	const finds = await sql`SELECT * FROM finds WHERE user_id = ${req.session.user.id}`;
 	for(const find of finds){
-		let first = await sql`select first_user from ducks where id = ${find.duck_id}`;
-		let duck = await sql`select location_description from ducks where id = ${find.duck_id}`;
-		let obtainable = await sql`select obtainable from ducks where id = ${find.duck_id}`;
+		let duck = await sql`SELECT location_description, first_user, obtainable, round_id FROM ducks WHERE id = ${find.duck_id}`;
 		parsedFinds.push({
 			location: duck[0].location_description,
 			date: new Date(find.find_date).toLocaleDateString("en-NZ"),
-			first: (first[0].first_user == req.session.user.id) ? true : false,
-			obtainable: obtainable[0].obtainable
+			first: (duck[0].first_user === req.session.user.id),
+			obtainable: duck[0].obtainable,
+			round_id: duck[0].round_id
 		});
-		if(first[0].first_user == req.session.user.id){
+		if(duck[0].first_user === req.session.user.id){
 			firstFinds++;
 		}
 	}
@@ -164,7 +195,7 @@ async function insertDuck(req, code, loc){
 		return "Code already exists";
 	}
 	try {
-		await sql`INSERT INTO ducks (duck_key, location_description, date_placed) VALUES (${code}, ${loc}, NOW())`;
+		await sql`INSERT INTO ducks (duck_key, location_description, date_placed, round_id) VALUES (${code}, ${loc}, NOW(), 2)`;
 		return "Success!";
 	} catch (err) {
 		return "Error inserting into database";
@@ -175,9 +206,9 @@ async function sendVerificationEmail(email, username) {
 	const uuid = uuidv4();
 	await sql`update users SET verification_id = ${uuid}, verification_date = NOW() where username = ${username}`;
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "Welcome to the duckers",
 		template: "verification",
@@ -194,9 +225,9 @@ async function sendPasswordResetEmail(email){
 	const uuid = uuidv4();
 	await sql`update users SET reset_id = ${uuid}, reset_date = NOW() where email = ${email}`;
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "Password reset",
 		template: "reset",
@@ -211,9 +242,9 @@ async function sendPasswordResetEmail(email){
 
 async function sendPasswordIsResetEmail(email){
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "We've reset your password",
 		template: "reset-done",
@@ -228,14 +259,33 @@ async function sendPasswordIsResetEmail(email){
 
 async function updateUserFinds() {
 	// reset user finds
-	await sql`UPDATE users SET finds = 0, first_finds = 0`;
+	await sql`UPDATE users SET round_1_finds = 0, round_1_first_finds = 0, round_2_finds = 0, round_2_first_finds = 0`;
 	const finds = await sql`SELECT * FROM finds ORDER BY find_date DESC`; // Get all finds
+
 	for (const find of finds) { // For each find
 		const duck = await sql`SELECT * FROM ducks WHERE id = ${find.duck_id}`; // Get duck found
-		if (duck[0].first_user === find.user_id) { // If user was first to find duck, add one to first_finds and finds
-			await sql`UPDATE users SET first_finds = first_finds + 1, finds = finds + 1 WHERE id = ${find.user_id}`;
-		} else { // If user was not first to find duck, add one to finds
-			await sql`UPDATE users SET finds = finds + 1 WHERE id = ${find.user_id}`;
+		if (duck[0].round_id === 1) { // If duck is from round 1
+			if (duck[0].first_user === find.user_id) { // If user was first to find duck, add one to first finds and finds
+				await sql`UPDATE users
+                          SET round_1_first_finds = round_1_first_finds + 1,
+                              round_1_finds       = round_1_finds + 1
+                          WHERE id = ${find.user_id}`;
+			} else { // If user was not first to find duck, add one to finds
+				await sql`UPDATE users
+                          SET round_1_finds = round_1_finds + 1
+                          WHERE id = ${find.user_id}`;
+			}
+		} else if (duck[0].round_id === 2) { // If duck is from round 2
+			if (duck[0].first_user === find.user_id) { // If user was first to find duck, add one to first finds and finds
+				await sql`UPDATE users
+                          SET round_2_first_finds = round_2_first_finds + 1,
+                              round_2_finds       = round_2_finds + 1
+                          WHERE id = ${find.user_id}`;
+			} else { // If user was not first to find duck, add one to finds
+				await sql`UPDATE users
+                          SET round_2_finds = round_2_finds + 1
+                          WHERE id = ${find.user_id}`;
+			}
 		}
 	}
 }

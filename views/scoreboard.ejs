@@ -9,17 +9,36 @@
         <h1>scoreboard</h1>
         <p>players are ranked by the amount of ducks they have found before anyone else. this means that removing or otherwise defacing ducks does not grant any advantage. it's a game, we're in it to have fun.</p>
         <p>we also reserve the right to remove any player from the game if they attempt to gain an unfair advantage.</p>
+
         <table>
             <tr>
                 <th class="scoreboard-username">Username</th>
                 <th class="scoreboard-stat">Firsts</th>
                 <th class="scoreboard-stat">Finds</th>
             </tr>
-            <% scoreboard.forEach(user => { %>
+            <% roundTwoScoreboard.forEach(user => { %>
                 <tr>
                     <td><%= user.username %></td>
-                    <td><%= user.first_finds %></td>
-                    <td><%= user.finds %></td>
+                    <td><%= user.round_2_first_finds %></td>
+                    <td><%= user.round_2_finds %></td>
+                </tr>
+            <% }); %>
+        </table>
+
+        <h3>round 1 scoreboard</h3>
+        <p>round one took place from 22-7-23 to 22-3-24. (admittedly after having to convince someone to find the last duck)</p>
+        <p>the final winners were:</p>
+        <table>
+            <tr>
+                <th class="scoreboard-username">Username</th>
+                <th class="scoreboard-stat">Firsts</th>
+                <th class="scoreboard-stat">Finds</th>
+            </tr>
+            <% roundOneScoreboard.forEach(user => { %>
+                <tr>
+                    <td><%= user.username %></td>
+                    <td><%= user.round_1_first_finds %></td>
+                    <td><%= user.round_1_finds %></td>
                 </tr>
             <% }); %>
         </table>

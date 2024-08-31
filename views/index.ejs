@@ -6,14 +6,14 @@
 <body>
     <%- include("./templates/header", {authorised, permissions}) %>
     <div class="content">
-        <h1 id="title">The duck hunt</h1>
+        <h1 id="title">The duck hunt 2</h1>
         <%- include("./templates/news") %>
         <h3>what?</h3>
-        <p>we've hidden some ducks around whs. find them, enter the code on them, and you'll be in.</p>
+        <p>we've hidden some <i>more</i> ducks around whs. find them, enter the code on them, and you'll be in. some ducks are from round one and do not count towards the new scoreboard.</p>
         <h3>how?</h3>
         <p>you'll need to register an account to play. use your school email. once you've done that, you can start hunting. click on duck entry, type in the code and if you're the first to find it, you'll score some points.</p>
         <h3>why?</h3>
-        <p>why not? also there's a prize for the best duck hunter.</p>
+        <p>why not? also there's a prize for the best duck hunter. if you won last year i swear the prize is coming.</p>
         <h3>when?</h3>
         <p>we'll hide one duck every day until we run out. we have quite a few</p>
         <h3>where?</h3>
@@ -21,7 +21,7 @@
         <br>
         <h3>stats</h3>
         <% if (stats.showStats) { %>
-            <p><b><%- stats.totalDucks %></b> ducks have been placed, of which <b><%- stats.lostDucks %></b> have been removed, for a total of <b><%- stats.availableDucks %></b> still available. <b><%- stats.unfoundDucks %></b> have not been found at all, and are still available.</p>
+            <p><b><%- stats.totalDucks %></b> ducks have been placed (<b><%- stats.roundOneDucks %></b> from r1, <b><%- stats.roundTwoDucks %></b> from r2), of which <b><%- stats.lostDucks %></b> have been removed (<b><%- stats.roundOneLostDucks %></b> from r1, <b><%- stats.roundTwoLostDucks %></b> from r2), for a total of <b><%- stats.availableDucks %></b> still available. <b><%- stats.unfoundDucks %></b> have not been found at all, and are still available.</p>
             <p><b><%- stats.totalUsers %></b> players have found a total of <b><%- stats.totalFinds %></b> ducks.</p>    
         <% } else {%>
             <p>sign in to view stats</p>

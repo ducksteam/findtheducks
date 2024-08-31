@@ -29,11 +29,6 @@ h3 {
     margin-bottom: 10px;
 }
 
-p {
-    margin-top: 0;
-    margin-bottom: 40px;
-}
-
 .navbar-home {
     float: left;
     margin-right: 15px;
@@ -42,6 +37,12 @@ p {
 .navbar-user {
     float: right;
     margin-left: 15px;
+}
+
+p, h1, h3, label, input[type=submit], .navbar, table {
+    font-family: "Caladea", "Arial", serif;
+    font-weight: 400;
+    font-style: italic;
 }
 
 .navbar-link {
@@ -60,7 +61,7 @@ p {
 }
 
 #home-link {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 #profile-link {
@@ -108,13 +109,6 @@ footer {
     margin-top: 30px;
 }
 
-#headerTitle {
-    font-size: 20px;
-    padding: 16px 15px 16px 0px;
-    border-right: #fff solid 2px;
-    margin-right: 5px;
-}
-
 .footerText {
     width: 100%;
     display: inline-block;
@@ -154,7 +148,7 @@ table {
     text-align: center;
 }
 
-.scoreboardUsername {
+.scoreboard-username {
     text-align: left;
 }
 
@@ -212,10 +206,4 @@ input[type=checkbox] {
     .scoreboard-stat {
         width: 20%;
     }
-}
-
-.alert-dark {
-    color: #1b1e21;
-    background-color: #d6d8d9;
-    border-color: #c6c8ca;
 }

@@ -7,8 +7,8 @@
     <%- include("../templates/header", {authorised, permissions}) %>
     <div class="content">
         <h1><%- user.username %></h1>
-        <% if (status == "undefined") {
-        } else if ( status == "Success!" || status == "Username updated") { %>
+        <% if (status === "undefined") {
+        } else if ( status === "Success!" || status === "Username updated") { %>
             <div class="alert alert-success"><%= status %></div>
         <% } else { %>
             <div class="alert alert-danger"><%= status %></div>
@@ -17,23 +17,32 @@
         <p>Your username is only shown on the scoreboard.</p>
         <form action="/users/profile" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <input type="text" name="username" placeholder="<%= user.username %>" required>
+            <label>
+                New username <br>
+                <input type="text" name="username" placeholder="<%= user.username %>" required>
+            </label>
             <input type="submit" value="Update">
         </form>
         <h3>Update password</h3>
         <form action="/users/password" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div class="formItem">
-                <label>Enter current password</label> <br>
-                <input type="password" name="oldPassword" required>
+                <label>
+                    Enter current password <br>
+                    <input type="password" name="oldPassword" required>
+                </label>
             </div>
             <div class="formItem">
-                <label>Enter new password</label> <br>
-                <input type="password" name="password" required>
+                <label>
+                    Enter new password <br>
+                    <input type="password" name="password" required>
+                </label>
             </div>
             <div class="formItem">
-                <label>Confirm new password</label> <br>
-                <input type="password" name="confirmPassword" required>
+                <label>
+                    Confirm new password <br>
+                    <input type="password" name="confirmPassword" required>
+                </label>
             </div>
             <input type="submit" value="Update">
         </form>
@@ -41,17 +50,19 @@
         <p>You've found <b><%- parsedFinds.length %></b> ducks.<br>For <b><%- firstFinds %></b> of those, you were the first.</p>
         <table>
             <tr>
-            <th class="profileHeader">Location Description</th>
-            <th class="profileHeader">Date Found</th>
-            <th class="profileHeader">First?</th>
-            <th class="profileHeader">Still there?</th>
+                <th class="profileHeader">Location Description</th>
+                <th class="profileHeader">Date Found</th>
+                <th class="profileHeader">First?</th>
+                <th class="profileHeader">Still there?</th>
+                <th class="profileHeader">Round no.</th>
             </tr>
             <% for(let i=0; i<parsedFinds.length; i++) { %>
                 <tr>
-                <td><%= parsedFinds[i].location %></td>
-                <td><%= parsedFinds[i].date %></td>
-                <td class="tableCheck"><%= parsedFinds[i].first ? "✓" : "x" %></td>
-                <td class="tableCheck"><%= parsedFinds[i].obtainable ? "✓" : "x" %></td>
+                    <td><%= parsedFinds[i].location %></td>
+                    <td><%= parsedFinds[i].date %></td>
+                    <td class="tableCheck"><%= parsedFinds[i].first ? "✓" : "x" %></td>
+                    <td class="tableCheck"><%= parsedFinds[i].obtainable ? "✓" : "x" %></td>
+                    <td><= parsedFinds[i].round_id %></td>
                 </tr>
             <% } %>
         </table>

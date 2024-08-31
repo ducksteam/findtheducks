@@ -7,8 +7,8 @@
     <%- include("../templates/header", {authorised, permissions}) %>
     <div class="content">
         <div class="login_box">
-            <h2>join the duckers</h2>
-            <% if (status == "undefined") {
+            <h3>join the duckers</h3>
+            <% if (status === "undefined") {
             } else if ( status !== "Success!") { %>
                 <div class="alert alert-danger"><%= status %></div>
             <% } else { %>
@@ -18,20 +18,28 @@
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <input type="hidden" name="_quack" value="<%= quack %>">
                 <div class="formItem">
-                    <label>email <i>- only players using a whs email will be eligible for the prize</i></label> <br>
-                    <input type="text" name="email" required>
+                    <label>
+                        email <i>- only players using a whs email will be eligible for the prize</i> <br>
+                        <input type="text" name="email" required>
+                    </label>
                 </div>
                 <div class="formItem"> 
-                    <label>username</label> <br>
-                    <input type="text" name="username" required>
+                    <label>
+                        username <br>
+                        <input type="text" name="username" required>
+                    </label>
                 </div>
                 <div class="formItem">
-                    <label>password</label> <br>
-                    <input type="password" name="password" autocomplete="off" required>
+                    <label>
+                        password <br>
+                        <input type="password" name="password" autocomplete="off" required>
+                    </label>
                 </div>
                 <div class="formItem">
-                    <label>confirm password</label> <br>
-                    <input type="password" name="confirmPassword" autocomplete="off" required>
+                    <label>
+                        confirm password <br>
+                        <input type="password" name="confirmPassword" autocomplete="off" required>
+                    </label>
                 </div>
                 <br>
                 <button type="submit">enter the duckening</button>

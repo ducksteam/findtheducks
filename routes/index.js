@@ -1,14 +1,18 @@
 import express from "express";
-const router = express.Router();
-
-import { entry, getScoreboard, insertDuck } from "../functions.js";
+import {entry, getScoreboard, insertDuck} from "../functions.js";
 import duckFact from "../duckFacts.js";
 import sql from "../db.js";
+
+const router = express.Router();
 
 router.get("/", async (req, res) => { // Serve home page
 	let stats = {
 		totalDucks: 0,
+		roundOneDucks: 0,
+		roundTwoDucks: 0,
 		lostDucks: 0,
+		roundOneLostDucks: 0,
+		roundTwoLostDucks: 0,
 		availableDucks: 0,
 		unfoundDucks: 0,
 		totalUsers: 0,
@@ -17,13 +21,19 @@ router.get("/", async (req, res) => { // Serve home page
 	};
 	if(req.session.authorised){
 		stats.showStats = true;
-		let totalDucks = await sql`SELECT COUNT(*) FROM ducks`;
-		let lostDucks = await sql`SELECT COUNT(*) FROM ducks WHERE obtainable = False`;
+		let roundOneDucks = await sql`SELECT COUNT(*) FROM ducks WHERE round_id = 1`;
+		let roundTwoDucks = await sql`SELECT COUNT(*) FROM ducks WHERE round_id = 2`;
+		let roundOneLostDucks = await sql`SELECT COUNT(*) FROM ducks WHERE obtainable = False AND round_id = 1`;
+		let roundTwoLostDucks = await sql`SELECT COUNT(*) FROM ducks WHERE obtainable = False AND round_id = 2`;
 		let unfoundDucks = await sql`SELECT COUNT(*) FROM ducks WHERE first_user IS NULL AND obtainable = True`;
 		let totalUsers = await sql`SELECT COUNT(*) FROM users WHERE permissions = 0`;
 		let totalFinds = await sql`SELECT COUNT(*) FROM finds`;
-		stats.totalDucks = totalDucks[0].count;
-		stats.lostDucks = lostDucks[0].count;
+		stats.totalDucks = roundOneDucks[0].count + roundTwoDucks[0].count;
+		stats.roundOneDucks = roundOneDucks[0].count;
+		stats.roundTwoDucks = roundTwoDucks[0].count;
+		stats.lostDucks = roundOneLostDucks[0].count + roundTwoLostDucks[0].count;
+		stats.roundOneLostDucks = roundOneLostDucks[0].count;
+		stats.roundTwoLostDucks = roundTwoLostDucks[0].count;
 		stats.availableDucks = stats.totalDucks - stats.lostDucks;
 		stats.unfoundDucks = unfoundDucks[0].count;
 		stats.totalUsers = totalUsers[0].count;
@@ -47,8 +57,11 @@ router.get("/breach", (req, res) => { // Serve breach report
 });
 
 router.get("/scoreboard", async (req, res) => { // Serve scoreboard page
-	let scoreboard = await getScoreboard();
-	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised, permissions: req.session.permissions, scoreboard, duckFact: duckFact() });
+	let roundOneScoreboard = await getScoreboard(1, false);
+	let roundTwoScoreboard = await getScoreboard(2, true);
+	if (roundOneScoreboard === 0 || roundOneScoreboard === undefined) roundOneScoreboard = [];
+	if (roundTwoScoreboard === 0 || roundTwoScoreboard === undefined) roundTwoScoreboard = [];
+	res.render("scoreboard", { pageTitle: "scoreboard", authorised: req.session.authorised, permissions: req.session.permissions, roundOneScoreboard, roundTwoScoreboard, duckFact: duckFact() });
 });
 
 router.get("/newduck", (req, res) => { // Serve new duck page
@@ -76,7 +89,7 @@ router.post("/newduck", async (req, res) => { // Handle new duck form submission
 });
 
 router.post("/entry", async (req, res) => { // Handle entry form submission
-	if(req.session.permissions == 0){
+	if(req.session.permissions === 0){
 		try{	
 			const status = await entry(req, res, req.body.duckCode);
 			res.redirect("/entry?status=" + encodeURIComponent(status));
