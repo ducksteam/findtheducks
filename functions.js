@@ -204,9 +204,9 @@ async function sendVerificationEmail(email, username) {
 	const uuid = uuidv4();
 	await sql`update users SET verification_id = ${uuid}, verification_date = NOW() where username = ${username}`;
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "Welcome to the duckers",
 		template: "verification",
@@ -223,9 +223,9 @@ async function sendPasswordResetEmail(email){
 	const uuid = uuidv4();
 	await sql`update users SET reset_id = ${uuid}, reset_date = NOW() where email = ${email}`;
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "Password reset",
 		template: "reset",
@@ -240,9 +240,9 @@ async function sendPasswordResetEmail(email){
 
 async function sendPasswordIsResetEmail(email){
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "We've reset your password",
 		template: "reset-done",
