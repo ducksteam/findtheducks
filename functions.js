@@ -111,6 +111,9 @@ async function entry(req, res, duckCode){
 	if (findCheck.length !== 0) {
 		return "Duck already found";
 	}
+
+	if (duckCheck[0].round_id === 1) return "Success, but this resilient duck was from round 1";
+
 	// Check if duck not yet been found and change first finder on duck
 	let firstCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id}`;
 	if(firstCheck.length === 0){
@@ -125,8 +128,7 @@ async function entry(req, res, duckCode){
 	}
 	// Update scoreboard
 	await updateUserFinds();
-	if (duckCheck[0].round_id === 1) return "Success, but this resilient duck was from round 1";
-	else return "Success!";
+	return "Success!";
 }
 
 async function getScoreboard(roundId, includeZeroFinds) {
