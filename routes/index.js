@@ -28,16 +28,19 @@ router.get("/", async (req, res) => { // Serve home page
 		let unfoundDucks = await sql`SELECT COUNT(*) FROM ducks WHERE first_user IS NULL AND obtainable = True`;
 		let totalUsers = await sql`SELECT COUNT(*) FROM users WHERE permissions = 0`;
 		let totalFinds = await sql`SELECT COUNT(*) FROM finds`;
-		stats.totalDucks = roundOneDucks[0].count + roundTwoDucks[0].count;
-		stats.roundOneDucks = roundOneDucks[0].count;
-		stats.roundTwoDucks = roundTwoDucks[0].count;
-		stats.lostDucks = roundOneLostDucks[0].count + roundTwoLostDucks[0].count;
-		stats.roundOneLostDucks = roundOneLostDucks[0].count;
-		stats.roundTwoLostDucks = roundTwoLostDucks[0].count;
+
+		// + casts the value to a number
+		stats.roundOneDucks = +roundOneDucks[0].count;
+		stats.roundTwoDucks = +roundTwoDucks[0].count;
+		stats.totalDucks = stats.roundOneDucks + stats.roundTwoDucks;
+		stats.roundOneLostDucks = +roundOneLostDucks[0].count;
+		stats.roundTwoLostDucks = +roundTwoLostDucks[0].count;
+		stats.lostDucks = stats.roundOneLostDucks + stats.roundTwoLostDucks;
 		stats.availableDucks = stats.totalDucks - stats.lostDucks;
-		stats.unfoundDucks = unfoundDucks[0].count;
-		stats.totalUsers = totalUsers[0].count;
-		stats.totalFinds = totalFinds[0].count;
+		stats.unfoundDucks = +unfoundDucks[0].count;
+		stats.totalUsers = +totalUsers[0].count;
+		stats.totalFinds = +totalFinds[0].count;
+		console.log(stats);
 	}
 	res.render("index", { stats, pageTitle: "home", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact()  });
 });
