@@ -40,7 +40,6 @@ router.get("/", async (req, res) => { // Serve home page
 		stats.unfoundDucks = +unfoundDucks[0].count;
 		stats.totalUsers = +totalUsers[0].count;
 		stats.totalFinds = +totalFinds[0].count;
-		console.log(stats);
 	}
 	res.render("index", { stats, pageTitle: "home", authorised: req.session.authorised, permissions: req.session.permissions, duckFact: duckFact()  });
 });
