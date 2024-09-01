@@ -3,6 +3,7 @@ name: publish
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 env:
   # Use docker.io for Docker Hub if empty
