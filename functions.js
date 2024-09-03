@@ -170,7 +170,7 @@ async function getScoreboard(roundId, includeZeroFinds) {
 async function getProfile(req){
 	let parsedFinds = [];
 	let firstFinds = 0;
-	const finds = await sql`SELECT * FROM finds WHERE user_id = ${req.session.user.id}`;
+	const finds = await sql`SELECT * FROM finds WHERE user_id = ${req.session.user.id} ORDER BY id DESC;`;
 	for(const find of finds){
 		let duck = await sql`SELECT location_description, first_user, obtainable, round_id FROM ducks WHERE id = ${find.duck_id}`;
 		parsedFinds.push({
