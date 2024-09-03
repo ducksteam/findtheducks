@@ -6,18 +6,19 @@
 <body>
     <%- include("./templates/header", {authorised, permissions}) %>
     <div class="content">
-        <h1 id="title">The duck hunt</h1>
+        <h1 id="title">The duck hunt 2</h1>
         <%- include("./templates/news") %>
         <h3>what?</h3>
-        <p>we've hidden some ducks around whs. find them, enter the code on them, and you'll be in.</p>
+        <p>we've hidden some <i>more</i> ducks around whs. find them, enter the code on them, and you'll be in. some ducks are from round one and do not count towards the new scoreboard.</p>
         <h3>how?</h3>
         <p>you'll need to register an account to play. use your school email. once you've done that, you can start hunting. click on duck entry, type in the code and if you're the first to find it, you'll score some points.</p>
         <h3>why?</h3>
-        <p>why not? also there's a prize for the best duck hunter.</p>
+        <p>why not? also there's a prize for the best duck hunter. if you won last year i swear the prize is coming.</p>
         <h3>when?</h3>
-        <p>we'll hide one duck every day until we run out. we have quite a few</p>
+        <p>many new ducks have been hidden and around three new ducks will appear each week until exam leave starts</p>
         <h3>where?</h3>
-        <p>everywhere on school grounds.</p>
+        <p>everywhere on school grounds. here's a duck from last year, so you know what you're looking for</p>
+        <img style="max-width: 50vw; padding-top:15px;" src="sample_duck.jpg" alt="a small white sticker with a yellow rubber duck on it. a black code is written on it.">
         <br>
         <h3>stats</h3>
         <% if (stats.showStats) { %>

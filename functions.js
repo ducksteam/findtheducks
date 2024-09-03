@@ -14,12 +14,15 @@ async function register(email, username, password, confirmPassword) {
 		return "Passwords do not match";
 	}
 
+	// Case lock email
+	email = email.toLowerCase();
+
 	// Check email is valid
 	const mailFormat = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;	
 	if (!email.match(mailFormat)) {
 		return "Invalid email";
 	}
-	
+
 	// Check username is valid
 	let emailCheck = await sql`select * from users where email = ${email}`;
 	if (emailCheck.length !== 0) {
@@ -71,6 +74,9 @@ async function updatePassword(uuid, password){
 }
 
 async function login(req, res, email, password) {
+	// Case lock email
+	email = email.toLowerCase();
+
 	// Check email is valid
 	const mailFormat = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;	
 	if (!email.match(mailFormat)) {
@@ -111,6 +117,9 @@ async function entry(req, res, duckCode){
 	if (findCheck.length !== 0) {
 		return "Duck already found";
 	}
+
+	if (duckCheck[0].round_id === 1) return "Success, but this resilient duck was from round 1";
+
 	// Check if duck not yet been found and change first finder on duck
 	let firstCheck = await sql`select * from finds where duck_id = ${duckCheck[0].id}`;
 	if(firstCheck.length === 0){
@@ -125,8 +134,7 @@ async function entry(req, res, duckCode){
 	}
 	// Update scoreboard
 	await updateUserFinds();
-	if (duckCheck[0].round_id === 1) return "Success, but this resilient duck was from round 1";
-	else return "Success!";
+	return "Success!";
 }
 
 async function getScoreboard(roundId, includeZeroFinds) {
@@ -204,9 +212,9 @@ async function sendVerificationEmail(email, username) {
 	const uuid = uuidv4();
 	await sql`update users SET verification_id = ${uuid}, verification_date = NOW() where username = ${username}`;
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "Welcome to the duckers",
 		template: "verification",
@@ -223,9 +231,9 @@ async function sendPasswordResetEmail(email){
 	const uuid = uuidv4();
 	await sql`update users SET reset_id = ${uuid}, reset_date = NOW() where email = ${email}`;
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "Password reset",
 		template: "reset",
@@ -240,9 +248,9 @@ async function sendPasswordResetEmail(email){
 
 async function sendPasswordIsResetEmail(email){
 	const mailgun = new Mailgun(FormData);
-	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.live" });
-	mg.messages.create("mg.findtheducks.live", {
-		from: "Find The Ducks <noreply@findtheducks.live>",
+	const mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY, domain: "mg.findtheducks.com" });
+	mg.messages.create("mg.findtheducks.com", {
+		from: "Find The Ducks <noreply@findtheducks.com>",
 		to: email,
 		subject: "We've reset your password",
 		template: "reset-done",
