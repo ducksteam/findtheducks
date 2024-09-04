@@ -11,7 +11,7 @@
         } else if ( status !== "Success!") { %>
             <div class="alert alert-danger"><%= status %></div>
         <% } else { %>
-            <div class="alert alert-success"><%= status %></div>
+            <div class="alert alert-success">Check your email for a reset link</div>
         <% } %>
         <form action="/users/reset" method="post">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">

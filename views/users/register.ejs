@@ -14,6 +14,7 @@
             <% } else { %>
                 <div class="alert alert-success">Check your email (and spam) for a verification link. This may take up to 5 minutes.</div>
             <% } %>
+            <p><b>returning players - your old account will still work with this site</b></p>
             <form action="/users/register" method="post">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <input type="hidden" name="_quack" value="<%= quack %>">
