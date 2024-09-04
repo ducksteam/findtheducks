@@ -22,7 +22,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use(favicon("public/favicon.png")); // Serve favicon
-app.use(logger("dev"));
+app.use(logger(":date[clf] - :remote-addr - :method :url :status - :response-time ms"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form submissions
 app.use(bodyParser.json());
